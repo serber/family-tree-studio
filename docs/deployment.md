@@ -5,7 +5,7 @@ HTML/CSS/JS and needs no Node process at runtime. Node is required only
 **at build time** (Node 22 LTS or newer). The recommended setup is nginx
 serving `dist/` at `https://treestudio.app`.
 
-Paths below assume Ubuntu 22.04/24.04 and the project in `/opt/family-tree-studio`.
+Paths below assume Ubuntu 22.04/24.04 and the project in `/opt/tree-studio`.
 
 ## What the build produces
 
@@ -44,30 +44,30 @@ node --version   # v22+
 ### Get the code and build
 
 ```bash
-sudo mkdir -p /opt/family-tree-studio
-sudo chown "$USER": /opt/family-tree-studio
+sudo mkdir -p /opt/tree-studio
+sudo chown "$USER": /opt/tree-studio
 
 # copy the project to the server (from your machine):
 #   rsync -a --delete --exclude node_modules --exclude dist \
-#     ./ user@server:/opt/family-tree-studio/
+#     ./ user@server:/opt/tree-studio/
 # or clone it:
-#   git clone <repo-url> /opt/family-tree-studio
+#   git clone <repo-url> /opt/tree-studio
 
-cd /opt/family-tree-studio
+cd /opt/tree-studio
 npm ci            # reproducible install from package-lock.json
 npm run build     # typecheck + build into dist/
 ```
 
 ### Configure nginx
 
-`/etc/nginx/sites-available/family-tree-studio`:
+`/etc/nginx/sites-available/tree-studio`:
 
 ```nginx
 server {
     listen 80;
     server_name treestudio.app www.treestudio.app;
 
-    root /opt/family-tree-studio/dist;
+    root /opt/tree-studio/dist;
     index index.html;
 
     # Pages are directories with an index.html; /editor redirects to /editor/.
@@ -88,7 +88,7 @@ server {
 ```
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/family-tree-studio /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/tree-studio /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default
 sudo nginx -t && sudo systemctl reload nginx
 sudo apt install -y certbot python3-certbot-nginx && sudo certbot --nginx -d treestudio.app -d www.treestudio.app
@@ -126,36 +126,22 @@ After the first deploy, register `treestudio.app` in
 
 ## 2. Updating to a new version
 
-Upload the new code, reinstall dependencies and rebuild; nginx serves the new
-files right away — **no restart is required** for static content.
+From the development machine, in the repository:
 
 ```bash
-cd /opt/family-tree-studio
-# upload beforehand (rsync as above, keeping node_modules and dist) or: git pull
-npm ci
-npm run build
+git archive main | ssh root@<server> 'bash /opt/tree-studio/scripts/update-server.sh'
 ```
 
-Asset filenames are content-hashed and HTML is served with `no-cache`, so
-browsers get the new version on the next page load.
+`scripts/update-server.sh` (shipped with the sources) unpacks the tarball over
+`/opt/tree-studio` (keeping `node_modules` and the builds), runs `npm ci`, the
+typecheck and `vite build --outDir dist-next`, then swaps `dist-next` → `dist`
+and keeps the previous build as `dist-prev`. The build runs under `nice` with a
+capped Node heap because the server also hosts other services. nginx serves the
+new files right away — no reload is needed. HTML is served with `no-cache` and
+assets are content-hashed, so browsers get the new version on the next load.
 
-### Zero-downtime variant
-
-`npm run build` clears `dist/` before writing, so for a few seconds nginx
-may serve a half-written build. To avoid that, build aside and swap:
+Rollback after a bad deploy:
 
 ```bash
-#!/usr/bin/env bash
-# /opt/family-tree-studio/update.sh — run after every upload
-set -euo pipefail
-cd /opt/family-tree-studio
-npm ci
-npm run typecheck
-npx vite build --outDir dist-next
-rm -rf dist-prev
-mv dist dist-prev 2>/dev/null || true
-mv dist-next dist
-echo "Deployed. Previous build kept in dist-prev/ (rollback: swap back)."
+ssh root@<server> 'cd /opt/tree-studio && mv dist dist-bad && mv dist-prev dist'
 ```
-
-Rollback after a bad deploy: `mv dist dist-bad && mv dist-prev dist`.
