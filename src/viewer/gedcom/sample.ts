@@ -1,7 +1,31 @@
-import largeExample from '../../../examples/example-large.ged?raw';
+import { AppError } from '../../shared/errors.ts';
+import { getLocale, type Locale } from '../../shared/i18n/index.ts';
+import demoRu from '../../../examples/demo-family.ru.ged?url';
+import demoEn from '../../../examples/demo-family.en.ged?url';
+
+const files: Record<Locale, string> = { ru: demoRu, en: demoEn };
+const samples = new Map<Locale, Promise<Uint8Array>>();
 
 /**
- * Demo tree loaded on startup and by the Sample button:
- * 483 people, 355 families, 7 generations (1–4 children per family).
+ * The demo family shown on startup and by the Sample button, in the current language:
+ * examples/demo-family.<locale>.ged, the same files the editor opens as its demo
+ * (300 people, one progenitor couple). Fetched once per language; raw bytes,
+ * decoded like any loaded file.
  */
-export const sampleGedcom: string = largeExample;
+export function loadSampleGedcom(): Promise<Uint8Array> {
+  const locale = getLocale();
+  let sample = samples.get(locale);
+  if (!sample) {
+    sample = fetch(files[locale])
+      .then(async (response) => {
+        if (!response.ok) throw new AppError('sampleUnavailable');
+        return new Uint8Array(await response.arrayBuffer());
+      })
+      .catch((error: unknown) => {
+        samples.delete(locale);
+        throw error instanceof AppError ? error : new AppError('sampleUnavailable');
+      });
+    samples.set(locale, sample);
+  }
+  return sample;
+}

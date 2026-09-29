@@ -91,5 +91,5 @@ The bundled sample is already a string and skips this step.
 1 CHIL @I3@
 ```
 
-The bundled demo (`examples/example-large.ged`, 489 people) loads on startup
-and via the «Пример» button.
+The demo family of the current language (`examples/demo-family.{ru,en}.ged`,
+300 people, shared with the editor) loads on startup and via the Sample («Пример») button.

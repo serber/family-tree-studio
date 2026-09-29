@@ -83,7 +83,11 @@ GEDCOM text → GedcomData → DescendantTree → Layout → SVG
 
 `ViewerApp.tsx` renders the static markup with React; `app.ts` (`mountViewer`) owns the state (`data`, `tree`, `layout`, `settings`) and fills the chart, settings panel, selects and status line imperatively; it returns a full teardown (StrictMode mounts twice in dev). The settings panel is generated from `controlGroups` descriptors in `ui/controls.ts` — to add a setting, extend `Settings` + `defaultSettings`, add a descriptor, add `viewer.controls.<key>` to both catalogs, consume it in layout/renderer. Settings changes recompute only `Layout → SVG`, once per animation frame, and skip the layout for style-only keys (`STYLE_ONLY`). All chart styling is SVG presentation attributes (export is self-contained); the JPEG export inlines the self-hosted Spectral faces as data URIs — no external libraries, keep it that way. Algorithm details: `docs/viewer/layout.md`; settings semantics: `docs/viewer/settings.md`.
 
-The visualizer is additionally checked with `tsconfig.viewer.json` (`noUncheckedIndexedAccess`, `noImplicitOverride`); its layout/tree/gedcom modules can be run directly in Node (Node 24 strips types) — see `docs/viewer/development.md`. Sample data: `examples/example-large.ged` (489 people, synthetic, with two second marriages).
+The visualizer is additionally checked with `tsconfig.viewer.json` (`noUncheckedIndexedAccess`, `noImplicitOverride`); its layout/tree/gedcom modules can be run directly in Node (Node 24 strips types) — see `docs/viewer/development.md`. 
+
+## Demo data
+
+`examples/demo-family.ru.ged` and `examples/demo-family.en.ged` — the product's demo family in each language (300 people, one progenitor couple, every 11th descendant marries twice; the Russian Lesnov family with patronymics and gendered surnames, the English Harper family without). The editor opens the file of the current language as its demo and the visualizer shows it on startup; both fetch the same assets. They are written from the editor's `createDemo(count, locale)` by `npm run demo` (a unit test fails when they are stale); `tests/fixtures/demo-3000.ged` is the Russian family grown to 3,000 people for the e2e scale test.
 
 ## Workflow
 

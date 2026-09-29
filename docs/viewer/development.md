@@ -32,7 +32,7 @@ directly in Node (Node ≥ 23 executes TypeScript without transpilation):
 node --eval "
 import('./src/viewer/gedcom/parser.ts').then(async ({ parseGedcom }) => {
   const { readFileSync } = await import('node:fs');
-  const data = parseGedcom(readFileSync('examples/example-large.ged', 'utf-8'));
+  const data = parseGedcom(readFileSync('examples/demo-family.ru.ged', 'utf-8'));
   console.log(data.individuals.size, data.families.size);
 });
 "
@@ -80,16 +80,11 @@ button is animated.
 
 ### Test data
 
-- `examples/example-large.ged` — the default demo, bundled via a Vite `?raw`
-  import in `src/viewer/gedcom/sample.ts` (loaded on startup and by the Sample
-  button): 489 people, 130 families, 7 generations, 1–4 children per family
-  (359 is the node count, not the family count — the two used to be conflated).
-  Two of those families are second marriages, put at different depths so the
-  remarriage rendering shows up in the default demo: Матвей Щербаков (`@I3@`,
-  ring 1) and Антон Кузнецов (`@I98@`, ring 3) each have two wives and children
-  by both. Use them to check that the person keeps a single cell, that the
-  spouse band splits between the two wives, and that each wife's cell sits
-  over her own children.
+- `examples/demo-family.ru.ged` and `examples/demo-family.en.ged` — the product's demo family in each language (300 people, one progenitor couple, every 11th descendant marries twice; the Russian Lesnov family with patronymics and gendered surnames, the English Harper family without). The editor opens the file of the current language as its demo and the visualizer shows it on startup; both fetch the same assets. They are written from the editor's `createDemo(count, locale)` by `npm run demo` (a unit test fails when they are stale); `tests/fixtures/demo-3000.ged` is the Russian family grown to 3,000 people for the e2e scale test. Loaded by `src/viewer/gedcom/sample.ts` (a `?url` import, fetched
+  once) on startup and by the Sample button. Its remarriages show that a person
+  keeps a single cell, that the spouse band splits between the two wives, and
+  that each wife's cell sits over her own children. Generation stops at 300
+  people, so the outermost ring is only partly filled.
 - For structure that the sample lacks, test on real trees of the shapes that
   motivated the fan layout: a patrilineal record with no spouses and no sex
   (narrow top, 200+ people per ring in the middle, many leaves at every

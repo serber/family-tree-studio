@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { importGedcomBytes, importGedcomText, parseGedcom } from './parser'
 import { exportGedcom } from './serializer'
 import { createSkeleton } from './skeleton'
-import { createDemo } from '../model/demo'
+import { DEMO_SIZE, createDemo, demoGedcom } from '../model/demo'
 import type { TreeDocument } from '../model/tree'
 import { addChild, addParent, addPartner, addPerson, deletePerson, unlinkParent, updateFamily, updatePerson } from '../model/ops'
 
@@ -205,6 +205,20 @@ describe('structural GEDCOM export', () => {
     expect(reimported.people).toEqual(tree.people)
     expect(families(reimported)).toEqual(families(tree))
     expect(exportGedcom(reimported)).toBe(output)
+  })
+
+  it('ships demo files that match the generator (run `npm run demo` after changing it)', () => {
+    const read = (path: string) => readFileSync(new URL(path, import.meta.url), 'utf8')
+    expect(read('../../../tests/fixtures/demo-3000.ged')).toBe(demoGedcom('ru', 3000))
+    for (const locale of ['ru', 'en'] as const) {
+      const demo = read(`../../../examples/demo-family.${locale}.ged`)
+      expect(demo).toBe(demoGedcom(locale))
+      const imported = importGedcomText(demo, `demo-family.${locale}.ged`)
+      expect(Object.keys(imported.people)).toHaveLength(DEMO_SIZE)
+      expect(imported.gedcom.warnings).toEqual([])
+      expect(exportGedcom(imported)).toBe(demo)
+    }
+    expect(read('../../../examples/demo-family.en.ged')).not.toMatch(/[А-Яа-яЁё]/)
   })
 
   it('never reuses the ID of a deleted person for a new one', () => {

@@ -1,7 +1,7 @@
 import { AppError } from '../shared/errors.ts';
 import { decodeGedcom } from './gedcom/decode.ts';
 import { parseGedcom } from './gedcom/parser.ts';
-import { sampleGedcom } from './gedcom/sample.ts';
+import { loadSampleGedcom } from './gedcom/sample.ts';
 import type { GedcomData } from './gedcom/types.ts';
 import { onLocaleChange } from '../shared/i18n/index.ts';
 import { t } from './i18n.ts';
@@ -221,6 +221,18 @@ export function mountViewer(el: ViewerElements): () => void {
     unmounted = true;
   });
 
+  /** Loads the demo family (fetched once); a failure shows in the status line. */
+  function loadSample(): void {
+    loadSampleGedcom().then(
+      (bytes) => {
+        if (!unmounted) loadGedcom(decodeGedcom(bytes));
+      },
+      (error: unknown) => {
+        if (!unmounted) setStatus(t('status.error', { message: errorMessage(error) }), true);
+      }
+    );
+  }
+
   function readFile(file: File): void {
     const reader = new FileReader();
     // Raw bytes, not readAsText: the encoding varies by program (see decodeGedcom).
@@ -240,7 +252,7 @@ export function mountViewer(el: ViewerElements): () => void {
       el.fileInput.value = '';
     });
 
-    listen(el.sampleBtn, 'click', () => loadGedcom(sampleGedcom));
+    listen(el.sampleBtn, 'click', loadSample);
 
     listen(el.rootSelect, 'change', () => {
       rootHistory.length = 0;
@@ -344,7 +356,7 @@ export function mountViewer(el: ViewerElements): () => void {
   cleanups.push(() => document.fonts?.removeEventListener('loadingdone', onFontsLoaded));
 
   applyLocale();
-  loadGedcom(sampleGedcom);
+  loadSample();
 
   return () => {
     for (const cleanup of cleanups.reverse()) cleanup();

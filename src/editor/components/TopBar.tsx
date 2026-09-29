@@ -6,6 +6,7 @@ import { LangSwitch } from '../../shared/components/LangSwitch'
 import { formatDateTime, getLocale, t as tr } from '../../shared/i18n'
 import { pageUrl } from '../../shared/routes'
 import { t } from '../i18n'
+import { DEMO_SIZE } from '../model/demo'
 
 export type View = 'tree' | 'table' | 'issues'
 
@@ -36,7 +37,7 @@ interface Props {
     onDownloadBackup: () => void
     onOpenBackup: () => void
     onSnapshots: () => void
-    onDemo: (count: number) => void
+    onDemo: () => void
   }
 }
 
@@ -96,9 +97,7 @@ export function TopBar(props: Props) {
         {item(t('file.snapshots'), <History size={16} />, props.file.onSnapshots)}
         <hr />
         <div className="menu-label">{t('file.examples')}</div>
-        {item(t('file.demo', { count: 100 }), <Sparkles size={16} />, () => props.file.onDemo(100))}
-        {item(t('file.demo', { count: 1000 }), <Sparkles size={16} />, () => props.file.onDemo(1000))}
-        {item(t('file.demo', { count: 3000 }), <Sparkles size={16} />, () => props.file.onDemo(3000))}
+        {item(t('file.demo', { count: DEMO_SIZE }), <Sparkles size={16} />, props.file.onDemo)}
         <hr />
         <div className="menu-note">{t('file.note')}</div>
       </div>}

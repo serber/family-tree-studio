@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url'
 import { expect, test, type Page } from '@playwright/test'
 
 function trackErrors(page: Page) {
@@ -137,10 +138,10 @@ test('loads 3,000 people, finds and edits the last person without relayout, and 
   const errors = trackErrors(page)
   await page.goto('/ru/editor/')
   await page.getByRole('button', { name: /Посмотреть на примере/ }).click()
-  await expect(page.locator('.canvas-stats')).toContainText('100 чел.')
-  await page.getByRole('button', { name: 'Файл' }).click()
+  await expect(page.locator('.canvas-stats')).toContainText('300 чел.')
+  // The same demo family grown to 3,000 people (scripts/generate-demo.ts), opened as a GEDCOM file.
   const started = Date.now()
-  await page.getByRole('menuitem', { name: 'Демо: 3 000 человек' }).click()
+  await page.getByTestId('gedcom-input').setInputFiles(fileURLToPath(new URL('./fixtures/demo-3000.ged', import.meta.url)))
   await expect(page.locator('.canvas-stats')).toContainText('3 000 чел.', { timeout: 60_000 })
   await expect(page.locator('.canvas-stats')).toContainText('раскладка')
   const readyMs = Date.now() - started
@@ -195,7 +196,7 @@ test('asks before replacing unsaved work, restores a downloaded backup and an au
 
   // Unsaved work: replacing it asks first, and cancelling keeps it.
   await page.getByRole('button', { name: 'Файл' }).click()
-  await page.getByRole('menuitem', { name: 'Демо: 100 человек' }).click()
+  await page.getByRole('menuitem', { name: 'Демо: 300 человек' }).click()
   await page.getByRole('button', { name: 'Отмена' }).click()
   await expect(page.locator('.canvas-stats')).toContainText('1 чел.')
 
@@ -207,16 +208,16 @@ test('asks before replacing unsaved work, restores a downloaded backup and an au
 
   // After a download there is nothing to lose, so no confirmation is needed.
   await page.getByRole('button', { name: 'Файл' }).click()
-  await page.getByRole('menuitem', { name: 'Демо: 100 человек' }).click()
-  await expect(page.locator('.canvas-stats')).toContainText('100 чел.')
+  await page.getByRole('menuitem', { name: 'Демо: 300 человек' }).click()
+  await expect(page.locator('.canvas-stats')).toContainText('300 чел.')
 
   await page.getByTestId('backup-input').setInputFiles(path!)
   await expect(page.locator('.canvas-stats')).toContainText('1 чел.')
   await expect(page.locator('.react-flow__node-person')).toContainText('Резервный')
   await page.getByRole('button', { name: 'Файл' }).click()
   await page.getByRole('menuitem', { name: 'Автосохранённые версии…' }).click()
-  await page.getByRole('dialog', { name: 'Автосохранённые версии' }).getByRole('button', { name: /100 чел\./ }).first().click()
-  await expect(page.locator('.canvas-stats')).toContainText('100 чел.')
+  await page.getByRole('dialog', { name: 'Автосохранённые версии' }).getByRole('button', { name: /300 чел\./ }).first().click()
+  await expect(page.locator('.canvas-stats')).toContainText('300 чел.')
 })
 
 test('flags a person entered twice and merges the duplicates from the checks view', async ({ page }) => {
@@ -253,7 +254,7 @@ test('review mode marks people without moving the selection, persists, and never
   const errors = trackErrors(page)
   await page.goto('/ru/editor/')
   await page.getByRole('button', { name: /Посмотреть на примере/ }).click()
-  await expect(page.locator('.canvas-stats')).toContainText('100 чел.')
+  await expect(page.locator('.canvas-stats')).toContainText('300 чел.')
   const exportText = async () => {
     const download = page.waitForEvent('download')
     await page.keyboard.press('Control+s')
@@ -263,11 +264,11 @@ test('review mode marks people without moving the selection, persists, and never
   const before = await exportText()
 
   await page.getByRole('button', { name: /Режим проверки/ }).click()
-  await expect(page.getByTestId('review-progress')).toHaveText('0 из 100')
+  await expect(page.getByTestId('review-progress')).toHaveText('0 из 300')
   await expect(page.locator('.person-card.is-unverified').first()).toBeVisible()
   await expect(panel(page).getByRole('heading', { level: 2 })).toHaveText('Леснов Александр')
   await page.keyboard.press('Space')
-  await expect(page.getByTestId('review-progress')).toHaveText('1 из 100')
+  await expect(page.getByTestId('review-progress')).toHaveText('1 из 300')
   await expect(page.locator('.react-flow__node-person[data-id="I1"] .person-card')).toHaveClass(/is-verified/)
   await expect(panel(page).locator('.verify-bar.ok')).toContainText('Проверен')
 
@@ -275,24 +276,24 @@ test('review mode marks people without moving the selection, persists, and never
   await panel(page).getByRole('button', { name: /Следующий/ }).click()
   await expect(panel(page).getByRole('heading', { level: 2 })).toHaveText('Леснова Анна')
   await page.keyboard.press('Space')
-  await expect(page.getByTestId('review-progress')).toHaveText('2 из 100')
+  await expect(page.getByTestId('review-progress')).toHaveText('2 из 300')
   await expect(panel(page).getByRole('heading', { level: 2 })).toHaveText('Леснова Анна')
   await page.keyboard.press('Space')
-  await expect(page.getByTestId('review-progress')).toHaveText('1 из 100')
+  await expect(page.getByTestId('review-progress')).toHaveText('1 из 300')
   await panel(page).getByRole('button', { name: 'Проверено' }).click()
-  await expect(page.getByTestId('review-progress')).toHaveText('2 из 100')
+  await expect(page.getByTestId('review-progress')).toHaveText('2 из 300')
   await expect(panel(page).getByRole('heading', { level: 2 })).toHaveText('Леснова Анна')
   await page.keyboard.press('Control+z')
-  await expect(page.getByTestId('review-progress')).toHaveText('1 из 100')
+  await expect(page.getByTestId('review-progress')).toHaveText('1 из 300')
   await page.keyboard.press('Control+Shift+z')
-  await expect(page.getByTestId('review-progress')).toHaveText('2 из 100')
+  await expect(page.getByTestId('review-progress')).toHaveText('2 из 300')
 
   await expect(page.getByTestId('save-status')).toContainText('Сохранено')
   await page.reload()
-  await expect(page.getByTestId('review-progress')).toHaveText('2 из 100')
+  await expect(page.getByTestId('review-progress')).toHaveText('2 из 300')
   await page.getByRole('button', { name: /Таблица/ }).click()
   await page.getByLabel('Статус проверки').selectOption('todo')
-  await expect(page.locator('.view-toolbar .count')).toHaveText('98 из 100')
+  await expect(page.locator('.view-toolbar .count')).toHaveText('298 из 300')
   await page.getByRole('button', { name: /Дерево/ }).click()
   expect(await exportText()).toBe(before)
   expect(errors).toEqual([])

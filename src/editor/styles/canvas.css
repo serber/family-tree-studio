@@ -7,6 +7,19 @@
     position: relative;
   }
 
+  /*
+   * While the table or issues view is open the canvas stays laid out but invisible:
+   * React Flow measures cards that arrive in the meantime (a layout finishing, a new
+   * document) at their real size. Under display: none they measured 0 × 0, and the
+   * canvas drew NaN positions when shown again.
+   */
+  .canvas.is-hidden {
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   .canvas .react-flow {
     --xy-background-color: var(--canvas);
     --xy-minimap-background-color: var(--surface);

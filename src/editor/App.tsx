@@ -7,7 +7,6 @@ import { CommandPalette, type PaletteCommand } from './components/CommandPalette
 import { IssuesView, PeopleTable } from './components/Views'
 import { ChoiceDialog, ConfirmDialog, ShortcutsDialog, SnapshotsDialog, Toast, Welcome, type ChoiceRequest, type ConfirmRequest, type ToastState } from './components/Overlays'
 import { TopBar, type View } from './components/TopBar'
-import { createDemo } from './model/demo'
 import { editorReducer, initialEditorState } from './model/history'
 import { findIssues } from './model/issues'
 import {
@@ -17,7 +16,7 @@ import {
 import { buildIndex, fullName, lifespan, lineageOf, marriageOrders, relativesOf, shortName, type Person, type PersonFields, type TreeDocument } from './model/tree'
 import { layoutInput } from './layout/layout'
 import { createSkeleton } from './gedcom/skeleton'
-import { readGedcom, writeGedcom } from './gedcom/client'
+import { readDemo, readGedcom, writeGedcom } from './gedcom/client'
 import { downloadBackup, loadDraft, parseDraft, requestPersistentStorage, saveDraft, snapshotNow, type Draft, type DraftMeta, type Snapshot } from './storage'
 import { isTyping, useLayout } from './hooks'
 import { AppError } from '../shared/errors'
@@ -68,20 +67,21 @@ export default function App() {
   if (!boot.ready) return <div className="startup"><div><LoaderCircle className="spin" /><p>{t('startup.loading')}</p></div></div>
   if (start) return <ReactFlowProvider><Editor start={start} /></ReactFlowProvider>
 
-  const openFile = async (file: File) => {
+  const open = async (read: () => Promise<TreeDocument>) => {
     setBusy(true)
     setError('')
     try {
-      const tree = await readGedcom(file)
+      const tree = await read()
       setStart({ tree, meta: { changedSinceExport: false }, select: Object.keys(tree.people)[0] })
     } catch (reason) { setError(errorMessage(reason)) }
     finally { setBusy(false) }
   }
+  const openFile = (file: File) => open(() => readGedcom(file))
   return <>
     <Welcome
       onNew={() => { const { tree, personId } = createNewTree(); setStart({ tree, meta: { changedSinceExport: true }, select: personId, focus: true }) }}
       onOpen={() => gedcomInput.current?.click()}
-      onDemo={() => setStart({ tree: createDemo(100), meta: { changedSinceExport: false }, select: 'I1' })} />
+      onDemo={() => void open(() => readDemo(t('defaults.demoTitle')))} />
     <input ref={gedcomInput} type="file" accept=".ged,.GED" hidden data-testid="gedcom-input" onChange={(event) => { const file = event.target.files?.[0]; if (file) void openFile(file); event.target.value = '' }} />
     {busy && <div className="file-busy"><div><LoaderCircle className="spin" size={26} />{t('busy.reading')}</div></div>}
     {error && <div className="toast error" role="alert"><span>{error}</span><button onClick={() => setError('')}>✕</button></div>}
@@ -406,6 +406,15 @@ function Editor({ start }: { start: Start }) {
     } catch (error) { showError(error) } finally { setBusy(null) }
   }, [replaceDocument, showError, replaceWarning])
 
+  const openDemo = useCallback(async () => {
+    setBusy(t('busy.reading'))
+    try {
+      const demo = await readDemo(t('defaults.demoTitle'))
+      setBusy(null)
+      await replaceDocument(demo, { confirm: replaceWarning, select: 'I1', exported: true })
+    } catch (error) { showError(error) } finally { setBusy(null) }
+  }, [replaceDocument, showError, replaceWarning])
+
   const openBackup = useCallback(async (file: File) => {
     try {
       if (file.size > 200 * 1024 * 1024) throw new AppError('backupTooLarge', { max: 200 })
@@ -430,8 +439,8 @@ function Editor({ start }: { start: Start }) {
     onDownloadBackup: () => { downloadBackup(tree); setMeta({ changedSinceExport: false, exportedAt: new Date().toISOString() }) },
     onOpenBackup: () => backupInput.current?.click(),
     onSnapshots: () => setShowSnapshots(true),
-    onDemo: (count: number) => void replaceDocument(createDemo(count), { confirm: replaceWarning, select: 'I1', exported: true }),
-  }), [replaceDocument, saveGedcom, tree, replaceWarning])
+    onDemo: () => void openDemo(),
+  }), [replaceDocument, saveGedcom, openDemo, tree, replaceWarning])
 
   const restoreSnapshot = useCallback((snapshot: Snapshot) => {
     setShowSnapshots(false)
@@ -533,7 +542,7 @@ function Editor({ start }: { start: Start }) {
       review={{ on: reviewMode, verified: verifiedCount, total: Object.keys(tree.people).length }} onToggleReview={() => setReviewMode((value) => !value)} />
     <div className="workspace">
       <main className="main-view">
-        <div className="canvas" hidden={view !== 'tree'} aria-label={t('canvas.label')}>
+        <div className={`canvas ${view === 'tree' ? '' : 'is-hidden'}`} aria-hidden={view !== 'tree'} aria-label={t('canvas.label')}>
           {layout.busy && layoutValid && <div className="layout-busy"><LoaderCircle className="spin" size={14} />{t('canvas.relayout')}</div>}
           {!layoutValid && Object.keys(tree.people).length > 0 && <div className="canvas-loading"><div>{layout.error ? <><strong>{t('canvas.layoutFailed')}</strong><span>{errorMessage(layout.error)}</span><button className="btn btn-primary" onClick={() => setLayoutAttempt((value) => value + 1)}>{t('canvas.retry')}</button></> : <><LoaderCircle className="spin" size={26} /><strong>{t('canvas.placing', { count: Object.keys(tree.people).length })}</strong></>}</div></div>}
           <TreeCanvas tree={tree} positions={layoutValid ? layout.positions : {}} selectedId={selectedId} lineage={lineage} newIds={newIds} command={command}

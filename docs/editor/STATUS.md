@@ -12,6 +12,12 @@ The editor («Родные») became the editor of Family Tree Studio (`/editor/
 - Product name: new GEDCOM skeletons say `SOUR FAMILY_TREE_STUDIO`; backups download as `*.treestudio.json`. IndexedDB keys keep the `rodnye:` prefix so existing drafts still open.
 - Checks: `npm run build` passed; `npm test` 117 passed (the editor's 110 plus catalog and English-date tests); e2e 15 passed (the 12 editor/GEDCOM workflows unchanged apart from the URL, plus 3 new: home page, visualizer, editor in English with a language switch). 3,000-person timings in Chrome 154 on this Mac: layout 287 ms, search 539 ms, selection 108 ms, keystroke median 39–50 ms across runs.
 
+## 2026-09-29 (later): one demo family
+
+- The product has one demo family of 300 people in two versions: `examples/demo-family.ru.ged` (the Lesnov family) and `examples/demo-family.en.ged` (the Harper family, English names, no patronymics), written from `createDemo(count, locale)` by `npm run demo`. The editor opens the file of the current language («Посмотреть на примере», File → «Демо: 300 человек») through the normal GEDCOM import, the visualizer shows it on startup; both fetch the same assets. The 100-, 1,000- and 3,000-person menu items are gone; `createDemo` stays as the generator and for tests. The e2e scale test opens `tests/fixtures/demo-3000.ged` (the same family, 3,000 people) as a GEDCOM file.
+- Fixed a canvas bug the larger demo exposed (it existed in the original editor too): when a layout arrived while the table or issues view was open, React Flow measured the new cards at 0 × 0 under `display: none` and drew NaN coordinates on return. The hidden canvas now keeps its layout (`visibility: hidden`).
+- Checks: `npm run build` passed; `npm test` 118 passed (new: the committed demo files match the generator and import/export byte-identically; the English file has no Cyrillic); e2e 15 tests passed twice in a row (`--repeat-each 2`, 30/30).
+
 The editor's own milestones below are unchanged.
 
 ## Current milestone

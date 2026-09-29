@@ -41,7 +41,7 @@
     "defaults": {
       "newTitle": "My tree",
       "importedTitle": "Family tree",
-      "demoTitle": "The Lesnov family (demo)",
+      "demoTitle": "The Harper family (demo)",
       "demoNote": "A fictional family tree for getting to know the editor. All people and events are generated automatically."
     },
     "startup": {
@@ -58,7 +58,7 @@
       "open": "Open a GEDCOM file",
       "openHint": ".ged from MyHeritage, Gramps, Ancestry and others",
       "demo": "Try an example",
-      "demoHint": "A fictional family of 100 people",
+      "demoHint": "A fictional family of 300 people",
       "privacy": "Everything is stored only in this browser. Nothing is sent over the internet."
     },
     "busy": {
@@ -103,7 +103,7 @@
       "downloadBackup": "Download a backup",
       "openBackup": "Open a backup…",
       "snapshots": "Autosaved versions…",
-      "examples": "Examples",
+      "examples": "Example",
       "demo": "Demo: {count, number} people",
       "note": "The tree is saved automatically in this browser. Save GEDCOM or a backup regularly — that is your copy outside the browser."
     },
@@ -397,6 +397,7 @@
     },
     "errors": {
       "unknown": "Something went wrong.",
+      "demoUnavailable": "Could not load the demo family. Check the connection and try again.",
       "storageRead": "Could not read the browser storage.",
       "draftFormat": "The draft has an unsupported format. It was left unchanged.",
       "backupTooLarge": "The file is too large: {max} MB at most.",
@@ -549,6 +550,7 @@
     },
     "errors": {
       "emptyGedcom": "Empty GEDCOM",
+      "sampleUnavailable": "Could not load the sample",
       "noFamilies": "No families (FAM records) found in the file",
       "familyNotFound": "Family {id} not found",
       "canvasUnavailable": "Canvas 2D is unavailable",

@@ -6,7 +6,7 @@ The editor of Family Tree Studio: a local-first editor for entering and editing 
 
 The editor lives at `/editor/` (English) and `/ru/editor/` (Russian). The interface language switches in place (RU / EN in the top bar); Russian name helpers (patronymics, surname forms) work in both languages. Quoted UI names below are the Russian labels.
 
-**Starting.** Start a new tree, open a `.ged` file, or try a 100-person fictional demo. GEDCOM files are parsed in a Worker; the current tree is replaced only after the file is validated.
+**Starting.** Start a new tree, open a `.ged` file, or try the fictional demo family of 300 people in the current language (`examples/demo-family.{ru,en}.ged`, the same files the visualizer shows). GEDCOM files are parsed in a Worker; the current tree is replaced only after the file is validated.
 
 **Adding people.** Select a card: buttons around it add a father, mother, brother, sister, son, daughter, or spouse. The new person is selected and the name field is focused. Suggestions are filled in from relatives:
 - a child gets the father's surname in the right gender form (Иванов → Иванова) and a patronymic from his name (Пётр → Петрович/Петровна);

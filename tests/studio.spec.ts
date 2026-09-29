@@ -28,6 +28,12 @@ test('home page leads to both tools in both languages', async ({ page }) => {
   await page.getByRole('link', { name: /Editor/ }).click()
   await expect(page).toHaveURL('http://127.0.0.1:5173/editor/')
   await expect(page.getByRole('button', { name: /Start a new tree/ })).toBeVisible()
+
+  // Each language has its own demo family: English names here, the Russian family under /ru/.
+  await page.getByRole('button', { name: /Try an example/ }).click()
+  await expect(page.locator('.canvas-stats')).toContainText('300 people')
+  await expect(page.getByLabel('Tree name')).toHaveValue('The Harper family (demo)')
+  await expect(page.getByRole('complementary', { name: 'Person card' }).getByRole('heading', { level: 2 })).toHaveText('Harper William')
   expect(errors).toEqual([])
 })
 
@@ -35,13 +41,13 @@ test('visualizer draws the sample, re-roots, searches, switches language in plac
   const errors = watchErrors(page)
   await page.goto('/ru/viewer/')
   const status = page.locator('.viewer-status')
-  await expect(status).toContainText('Показано: 489 человек')
+  await expect(status).toContainText('Показано: 300 человек')
   // StrictMode mounts, unmounts and mounts again in development: exactly one chart must remain.
   await expect(page.locator('.viewer-chart svg')).toHaveCount(1)
   const cells = await page.locator('g.cell').count()
-  expect(cells).toBeGreaterThan(400)
+  expect(cells).toBeGreaterThan(250)
 
-  await page.getByPlaceholder('Имя — Enter, чтобы показать').fill('Щербаков')
+  await page.getByPlaceholder('Имя — Enter, чтобы показать').fill('Леснов')
   await expect(status).toContainText('найдено:')
 
   // Clicking a person re-roots the chart on their branch; «Back» returns.
@@ -58,7 +64,7 @@ test('visualizer draws the sample, re-roots, searches, switches language in plac
 
   await page.getByRole('button', { name: 'EN' }).click()
   await expect(page).toHaveURL('http://127.0.0.1:5173/viewer/')
-  await expect(status).toContainText('Shown: 489 people')
+  await expect(status).toContainText('Shown: 300 people')
   await expect(page).toHaveTitle('Radial Family Tree from GEDCOM — Family Tree Studio')
   await expect(page.getByRole('button', { name: 'Download JPEG' })).toBeVisible()
   await expect(page.locator('.settings-group summary').first()).toHaveText('Layout')
