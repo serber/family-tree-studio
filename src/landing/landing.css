@@ -29,17 +29,6 @@
     text-align: center;
   }
 
-  .landing-eyebrow {
-    margin: 0;
-    padding: 5px 12px;
-    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-    border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--surface) 80%, transparent);
-    font-size: 12.5px;
-    font-weight: 650;
-    color: var(--accent);
-  }
-
   .landing-hero h1 {
     max-width: 17ch;
     margin: 0;
@@ -62,14 +51,14 @@
   /* The two entry points: medium-sized, side by side, stacked on narrow screens. */
   .landing-actions {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 270px));
+    grid-template-columns: repeat(2, minmax(0, 320px));
     gap: 14px;
     margin-top: 14px;
   }
 
   .landing-action {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 13px;
     padding: 14px 16px;
     border: 1px solid var(--border);
@@ -112,13 +101,15 @@
 
   .landing-action-text small {
     display: block;
-    margin-top: 2px;
-    font-size: 12.5px;
+    margin-top: 3px;
+    font-size: 13px;
+    line-height: 1.45;
     color: var(--text-3);
   }
 
   .landing-action-arrow {
     flex-shrink: 0;
+    align-self: center;
     color: var(--text-3);
     transition: transform var(--duration) var(--ease-out), color var(--duration-fast);
   }
@@ -144,10 +135,11 @@
     color: inherit;
   }
 
+  /* Full-strength text on the accent: a tint would drop below 4.5:1. */
   .landing-action-primary .landing-action-text small,
   .landing-action-primary .landing-action-arrow,
   .landing-action-primary:hover .landing-action-arrow {
-    color: color-mix(in srgb, var(--accent-text) 78%, transparent);
+    color: var(--accent-text);
   }
 
   .landing-note {

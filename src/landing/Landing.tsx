@@ -15,7 +15,6 @@ export function Landing() {
     </header>
 
     <main className="landing-hero">
-      <p className="landing-eyebrow">{t('landing.eyebrow')}</p>
       <h1>{t('landing.title')}</h1>
       <p className="landing-intro">{t('landing.intro')}</p>
 

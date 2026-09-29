@@ -31,7 +31,7 @@
   --border-strong: #cfd4cc;
   --text: #1f2a24;
   --text-2: #56625a;
-  --text-3: #8a948c;
+  --text-3: #646e67; /* ≥ 4.5:1 on every light surface (WCAG AA) */
 
   /* Accent and states */
   --accent: #2f7a58;
@@ -91,7 +91,7 @@
     --border-strong: #3b4640;
     --text: #e7ece8;
     --text-2: #aab5ae;
-    --text-3: #76827a;
+    --text-3: #95a098; /* ≥ 4.5:1 on every dark surface (WCAG AA) */
 
     --accent: #4fb386;
     --accent-hover: #62c496;

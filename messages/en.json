@@ -8,31 +8,44 @@
   },
   "meta": {
     "home": {
-      "title": "Family Tree Studio — family tree editor and visualizer",
-      "description": "Build your family tree in the editor and turn it into a beautiful radial chart for printing. GEDCOM, no signup: your data stays in your browser.",
-      "noscript": "Family Tree Studio is a free GEDCOM family tree editor and visualizer. JavaScript must be enabled to use it."
+      "title": "Online Family Tree Maker: Build It and Print It Large",
+      "description": "Build your family tree in the browser and print it on a large canvas, up to A0. Opens GEDCOM files from MyHeritage, Gramps, Ancestry and other genealogy software.",
+      "noscript": "Family Tree Studio lets you build your family tree and print a chart of it on a large canvas. JavaScript must be enabled.",
+      "name": "Family Tree Studio",
+      "features": "Build a family tree right on the chart, Checks for mistakes in dates and links, Chart of the whole tree for large-format printing from A3 to A0, GEDCOM import and export, Data stays on the user's computer",
+      "imageAlt": "Family Tree Studio — build your family tree and print it on a large canvas"
     },
     "editor": {
-      "title": "Family Tree Editor — Family Tree Studio",
-      "description": "Free family tree editor: the whole tree on one canvas, fast entry of relatives, GEDCOM import and export. Your data stays on your device.",
-      "noscript": "Family Tree Studio editor. JavaScript must be enabled to use the editor."
+      "title": "Online Family Tree Editor — Family Tree Studio",
+      "description": "Build your family tree right on the chart: parents, spouses, children, dates and places. Mistakes are flagged, and the result is saved as GEDCOM.",
+      "noscript": "The Family Tree Studio editor: add relatives right on the tree and save the result as GEDCOM. JavaScript must be enabled to use the editor.",
+      "name": "Family Tree Studio Editor",
+      "features": "Add relatives right on the tree, Checks for mistakes in dates and links, Search across thousands of people, GEDCOM 5.5.1 and 7.0 import and export",
+      "imageAlt": "Family Tree Studio family tree editor"
     },
     "viewer": {
-      "title": "Radial Family Tree from GEDCOM — Family Tree Studio",
-      "description": "Free online family tree visualizer for GEDCOM files: a radial (circular) descendant chart, flexible styling and JPEG export for printing a poster. Your file is processed right in the browser and never uploaded anywhere.",
-      "noscript": "Radial Family Tree is a free online GEDCOM family tree visualizer. Load a file exported from any genealogy application (MyHeritage, Gramps, Family Tree Builder, Ancestry and others) and get a circular descendant chart with JPEG export for poster printing. JavaScript must be enabled to use the app."
+      "title": "Large Printable Family Tree Chart from GEDCOM — Family Tree Studio",
+      "description": "Open a GEDCOM file and see your whole family tree on one chart. Adjust the look and save it for printing on a large canvas, up to A0.",
+      "noscript": "The Family Tree Studio chart: open a GEDCOM file from any genealogy program and save a chart of the whole tree for printing on a large canvas. JavaScript must be enabled.",
+      "name": "Family Tree Studio Chart",
+      "imageAlt": "Family Tree Studio family tree chart",
+      "features": "The whole tree on one canvas, Adjustable colors and layout, JPEG export for printing from A3 to A0 and 4K, GEDCOM files from MyHeritage, Gramps, Ancestry and other software"
+    },
+    "breadcrumbs": {
+      "home": "Home",
+      "editor": "Editor",
+      "viewer": "Tree chart"
     }
   },
   "landing": {
-    "eyebrow": "Genealogy in your browser",
-    "title": "Build your family tree and show it beautifully",
-    "intro": "Enter your relatives in the editor, save a GEDCOM file and turn it into a radial chart for a printed poster. Runs in the browser, no signup.",
+    "title": "Put your family's story together",
+    "intro": "Two tools for your family tree: one to build it, the other to get it ready for printing on a large canvas.",
     "editor": "Editor",
-    "editorHint": "Enter and verify your family tree",
+    "editorHint": "This is where you build the tree: add relatives and note who is whose parent, spouse or child.",
     "viewer": "Visualizer",
-    "viewerHint": "Radial chart from a GEDCOM file",
-    "privacy": "Your data never leaves your browser: nothing is sent to a server.",
-    "gedcom": "GEDCOM files from MyHeritage, Gramps, Ancestry and other genealogy software"
+    "viewerHint": "Shows the whole tree on one chart that you can save and print on a large canvas.",
+    "privacy": "Your tree is stored only on your own computer.",
+    "gedcom": "Already keep a tree in MyHeritage, Gramps or Ancestry? Save it as a GEDCOM file and it will open here."
   },
   "editor": {
     "app": {
@@ -467,7 +480,7 @@
   "viewer": {
     "app": {
       "heading": "Visualizer",
-      "subtitle": "Radial family tree from a GEDCOM file"
+      "subtitle": "Family tree chart from a GEDCOM file"
     },
     "legend": {
       "male": "Men",

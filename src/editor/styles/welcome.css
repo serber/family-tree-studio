@@ -74,6 +74,11 @@
     margin-top: 2px;
   }
 
+  /* Full-strength text on the accent: a translucent one would drop below 4.5:1. */
+  .welcome-option.primary small {
+    opacity: 1;
+  }
+
   .welcome-head {
     display: flex;
     align-items: center;

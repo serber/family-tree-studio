@@ -14,7 +14,9 @@ import { createServer } from 'vite'
  */
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const server = await createServer({ root, configFile: resolve(root, 'vite.config.ts'), server: { middlewareMode: true, hmr: false }, appType: 'custom', logLevel: 'error' })
+const server = await createServer({ root, configFile: resolve(root, 'vite.config.ts'), server: { middlewareMode: true, hmr: false }, appType: 'custom', logLevel: 'error',
+    // Its own dependency cache: sharing node_modules/.vite would clobber a running dev server's.
+    cacheDir: resolve(root, 'node_modules/.vite-ssr') })
 try {
   const { DEMO_SIZE, demoGedcom } = await server.ssrLoadModule('/src/editor/model/demo.ts') as typeof import('../src/editor/model/demo')
   const files = [['examples/demo-family.ru.ged', 'ru', DEMO_SIZE], ['examples/demo-family.en.ged', 'en', DEMO_SIZE], ['tests/fixtures/demo-3000.ged', 'ru', 3000]] as const

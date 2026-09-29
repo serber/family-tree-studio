@@ -18,7 +18,7 @@ dist/
   viewer/index.html     /viewer/     visualizer, English
   ru/viewer/index.html  /ru/viewer/  visualizer, Russian
   assets/               hashed JS/CSS/fonts/workers (immutable)
-  sitemap.xml robots.txt favicon.* apple-touch-icon.png og-image.jpg
+  sitemap.xml robots.txt favicon.* apple-touch-icon.png icon-*.png site.webmanifest og-{en,ru}.jpg
 ```
 
 Every page carries its own title, description, canonical URL, `hreflang`

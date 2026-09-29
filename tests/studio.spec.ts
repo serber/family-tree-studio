@@ -11,13 +11,13 @@ function watchErrors(page: Page): string[] {
 test('home page leads to both tools in both languages', async ({ page }) => {
   const errors = watchErrors(page)
   await page.goto('/ru/')
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Соберите семейное дерево и покажите его красиво')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Соберите историю своей семьи')
   await expect(page.locator('html')).toHaveAttribute('lang', 'ru')
 
   await page.getByRole('link', { name: 'EN' }).click()
   await expect(page).toHaveURL('http://127.0.0.1:5173/')
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Build your family tree and show it beautifully')
-  await expect(page).toHaveTitle(/family tree editor and visualizer/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText("Put your family's story together")
+  await expect(page).toHaveTitle('Online Family Tree Maker: Build It and Print It Large')
 
   await page.getByRole('link', { name: /Visualizer/ }).click()
   await expect(page).toHaveURL('http://127.0.0.1:5173/viewer/')
@@ -65,7 +65,7 @@ test('visualizer draws the sample, re-roots, searches, switches language in plac
   await page.getByRole('button', { name: 'EN' }).click()
   await expect(page).toHaveURL('http://127.0.0.1:5173/viewer/')
   await expect(status).toContainText('Shown: 300 people')
-  await expect(page).toHaveTitle('Radial Family Tree from GEDCOM — Family Tree Studio')
+  await expect(page).toHaveTitle('Large Printable Family Tree Chart from GEDCOM — Family Tree Studio')
   await expect(page.getByRole('button', { name: 'Download JPEG' })).toBeVisible()
   await expect(page.locator('.settings-group summary').first()).toHaveText('Layout')
   await expect(page.locator('.settings-group').first().locator('select').first()).toHaveValue('cards')
@@ -98,10 +98,10 @@ test('editor works in English and keeps its state when the language changes', as
   await panel.locator('input[name="birthDate"]').press('Enter')
   await expect(panel.getByRole('heading', { level: 2 })).toHaveText('Smith John')
 
-  await expect(page).toHaveTitle('Family Tree Editor — Family Tree Studio')
+  await expect(page).toHaveTitle('Online Family Tree Editor — Family Tree Studio')
   await page.getByRole('button', { name: 'RU' }).click()
   await expect(page).toHaveURL('http://127.0.0.1:5173/ru/editor/')
-  await expect(page).toHaveTitle('Редактор семейного дерева — Family Tree Studio')
+  await expect(page).toHaveTitle('Редактор родословной онлайн — Family Tree Studio')
   const russian = page.getByRole('complementary', { name: 'Карточка человека' })
   await expect(russian.getByRole('heading', { level: 2 })).toHaveText('Smith John')
   await expect(russian.locator('input[name="birthDate"]')).toHaveValue('ок. 1920')

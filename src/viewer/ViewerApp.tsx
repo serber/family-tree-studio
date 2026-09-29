@@ -48,7 +48,7 @@ export function ViewerApp() {
           </a>
           <LangSwitch />
         </div>
-        <p className="viewer-subtitle">{t('app.subtitle')}</p>
+        <h1 className="viewer-subtitle">{t('app.subtitle')}</h1>
         <div className="legend">
           <span><i className="legend-swatch legend-swatch-male" />{t('legend.male')}</span>
           <span><i className="legend-swatch legend-swatch-female" />{t('legend.female')}</span>
