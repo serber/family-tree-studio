@@ -1,0 +1,73 @@
+0 HEAD
+1 SOUR RODNYE_TEST
+2 VERS 1.0
+1 SUBM @SUB1@
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Dr. John /Doe/ Jr.
+2 NPFX Dr.
+2 GIVN John
+2 SURN Doe
+2 NSFX Jr.
+2 SOUR @S1@
+1 NAME Johnny /Doe/
+2 TYPE aka
+1 SEX M
+1 BIRT
+2 DATE ABT 1900
+2 PLAC Lyon, France
+2 SOUR @S1@
+3 PAGE 42
+1 DEAT
+2 DATE BEF 1980
+1 NOTE @N1@
+1 NOTE First line
+2 CONT Second line with me@@example.com
+2 CONC  and more text
+2 CONT
+2 CONT Last line
+2 SOUR @S1@
+1 FAMS @F1@
+1 FAMS @F2@
+1 _CUSTOM Keep exactly
+2 _DEEP original  spacing
+0 @I2@ INDI
+1 NAME Jane /Smith/
+1 SEX F
+1 FAMS @F1@
+0 @I3@ INDI
+1 NAME Alex /Doe/
+1 FAMC @F1@
+2 PEDI adopted
+1 ADOP
+2 FAMC @F1@
+3 ADOP BOTH
+0 @I4@ INDI
+1 NAME Mary /Brown/
+1 FAMS @F2@
+0 @I5@ INDI
+1 NAME Robin /Doe/
+1 FAMC @F2@
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I2@
+1 CHIL @I3@
+1 MARR
+2 DATE 1920
+0 @F2@ FAM
+1 HUSB @I1@
+1 WIFE @I4@
+1 CHIL @I5@
+0 @N1@ NOTE Shared note referenced by pointer
+1 CONT Preserve the shared record
+0 @S1@ SOUR
+1 TITL Original source
+1 REPO @R1@
+0 @R1@ REPO
+1 NAME Example archive
+0 @SUB1@ SUBM
+1 NAME Fixture author
+0 TRLR

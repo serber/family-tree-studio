@@ -1,0 +1,563 @@
+{
+  "common": {
+    "product": "Family Tree Studio",
+    "home": "Home",
+    "homeTitle": "Family Tree Studio — {page}. Go to the home page",
+    "backHome": "Home page",
+    "language": "Language"
+  },
+  "meta": {
+    "home": {
+      "title": "Family Tree Studio — family tree editor and visualizer",
+      "description": "Build your family tree in the editor and turn it into a beautiful radial chart for printing. GEDCOM, no signup: your data stays in your browser.",
+      "noscript": "Family Tree Studio is a free GEDCOM family tree editor and visualizer. JavaScript must be enabled to use it."
+    },
+    "editor": {
+      "title": "Family Tree Editor — Family Tree Studio",
+      "description": "Free family tree editor: the whole tree on one canvas, fast entry of relatives, GEDCOM import and export. Your data stays on your device.",
+      "noscript": "Family Tree Studio editor. JavaScript must be enabled to use the editor."
+    },
+    "viewer": {
+      "title": "Radial Family Tree from GEDCOM — Family Tree Studio",
+      "description": "Free online family tree visualizer for GEDCOM files: a radial (circular) descendant chart, flexible styling and JPEG export for printing a poster. Your file is processed right in the browser and never uploaded anywhere.",
+      "noscript": "Radial Family Tree is a free online GEDCOM family tree visualizer. Load a file exported from any genealogy application (MyHeritage, Gramps, Family Tree Builder, Ancestry and others) and get a circular descendant chart with JPEG export for poster printing. JavaScript must be enabled to use the app."
+    }
+  },
+  "landing": {
+    "eyebrow": "Genealogy in your browser",
+    "title": "Build your family tree and show it beautifully",
+    "intro": "Enter your relatives in the editor, save a GEDCOM file and turn it into a radial chart for a printed poster. Runs in the browser, no signup.",
+    "editor": "Editor",
+    "editorHint": "Enter and verify your family tree",
+    "viewer": "Visualizer",
+    "viewerHint": "Radial chart from a GEDCOM file",
+    "privacy": "Your data never leaves your browser: nothing is sent to a server.",
+    "gedcom": "GEDCOM files from MyHeritage, Gramps, Ancestry and other genealogy software"
+  },
+  "editor": {
+    "app": {
+      "name": "Editor"
+    },
+    "defaults": {
+      "newTitle": "My tree",
+      "importedTitle": "Family tree",
+      "demoTitle": "The Lesnov family (demo)",
+      "demoNote": "A fictional family tree for getting to know the editor. All people and events are generated automatically."
+    },
+    "startup": {
+      "loading": "Opening your family tree…",
+      "failedTitle": "Could not open the saved tree",
+      "failedHint": "The saved data was not overwritten. Check that the browser allows this site to store data.",
+      "retry": "Try again"
+    },
+    "welcome": {
+      "title": "Bring your family tree into digital form",
+      "intro": "Add people right on the tree: parents, spouses, children — in one click or with one key. Surnames and dates are prefilled, and the result is saved as GEDCOM, which every genealogy program understands.",
+      "new": "Start a new tree",
+      "newHint": "With yourself or with the oldest known ancestor",
+      "open": "Open a GEDCOM file",
+      "openHint": ".ged from MyHeritage, Gramps, Ancestry and others",
+      "demo": "Try an example",
+      "demoHint": "A fictional family of 100 people",
+      "privacy": "Everything is stored only in this browser. Nothing is sent over the internet."
+    },
+    "busy": {
+      "reading": "Reading the file…",
+      "exporting": "Preparing GEDCOM…",
+      "local": "Data is processed on this device"
+    },
+    "topbar": {
+      "treeTitle": "Tree name",
+      "views": "View",
+      "search": "Find a person",
+      "searchPlaceholder": "Find a person…",
+      "undo": "Undo",
+      "undoTitle": "Undo: {label} (Ctrl+Z)",
+      "undoPlain": "Undo (Ctrl+Z)",
+      "redo": "Redo",
+      "redoTitle": "Redo: {label} (Ctrl+Shift+Z)",
+      "redoPlain": "Redo (Ctrl+Shift+Z)",
+      "help": "Keys and help",
+      "helpTitle": "Keys and help (?)"
+    },
+    "views": {
+      "tree": "Tree",
+      "table": "Table",
+      "issues": "Issues",
+      "issuesTitle": "Issues: possible mistakes in the data"
+    },
+    "save": {
+      "pending": "Saving…",
+      "local": "Saved in the browser",
+      "exported": "Saved and exported",
+      "error": "Saving failed — retry",
+      "retryTitle": "Retry saving",
+      "unexportedTitle": "Changes are saved in the browser but not yet exported to a file. Save GEDCOM (Ctrl+S) to have a copy outside the browser.",
+      "exportedAt": "Exported {date}"
+    },
+    "file": {
+      "menu": "File",
+      "saveGedcom": "Save GEDCOM",
+      "openGedcom": "Open GEDCOM…",
+      "newTree": "New tree",
+      "downloadBackup": "Download a backup",
+      "openBackup": "Open a backup…",
+      "snapshots": "Autosaved versions…",
+      "examples": "Examples",
+      "demo": "Demo: {count, number} people",
+      "note": "The tree is saved automatically in this browser. Save GEDCOM or a backup regularly — that is your copy outside the browser."
+    },
+    "review": {
+      "toggle": "Review mode",
+      "toggleTitle": "Review mode: unchecked people are highlighted in red. Space marks the selected person as checked or removes the mark.",
+      "progress": "{verified, number} of {total, number}",
+      "verified": "Checked",
+      "unverified": "Not checked",
+      "mark": "Checked",
+      "markTitle": "Mark as checked (Space)",
+      "unmark": "Unmark",
+      "unmarkTitle": "Remove the mark (Space)",
+      "next": "Next",
+      "nextTitle": "Go to the nearest unchecked relative"
+    },
+    "canvas": {
+      "label": "Family tree canvas",
+      "relayout": "Rearranging the tree…",
+      "layoutFailed": "Could not lay out the tree",
+      "retry": "Retry",
+      "placing": "Placing {count, plural, one {# person} other {# people}}",
+      "minimap": "Tree minimap",
+      "stats": "{people, plural, one {# person} other {# people}} · {families, plural, one {# family} other {# families}}",
+      "layoutMs": "layout {ms} ms",
+      "empty": "The tree is empty",
+      "emptyHint": "Start with yourself or with the oldest known ancestor.",
+      "addFirst": "Add the first person",
+      "zoomOut": "Zoom out",
+      "zoomIn": "Zoom in",
+      "toSelected": "To selected",
+      "toSelectedTitle": "To the selected person (1)",
+      "fit": "Whole tree",
+      "fitTitle": "Show the whole tree (0)",
+      "lineageOn": "Lineage: on",
+      "lineageOff": "Lineage: off",
+      "lineageTitle": "Highlight the ancestors and descendants of the selected person"
+    },
+    "person": {
+      "unnamed": "Unnamed",
+      "surnameMissing": "surname?",
+      "givenMissing": "name?",
+      "noDetails": "No details",
+      "parentage": "{sex, select, M {son} F {daughter} other {child}} of {names}",
+      "parentsJoin": " and "
+    },
+    "relation": {
+      "father": "Father",
+      "mother": "Mother",
+      "son": "Son",
+      "daughter": "Daughter",
+      "brother": "Brother",
+      "sister": "Sister",
+      "child": "{sex, select, M {Son} F {Daughter} other {Child}}",
+      "sibling": "{sex, select, M {Brother} F {Sister} other {}}",
+      "partnerOf": "{sex, select, M {Wife} F {Husband} other {Spouse}}"
+    },
+    "keys": {
+      "father": "J",
+      "mother": "V",
+      "son": "C",
+      "daughter": "L",
+      "partner": "G",
+      "brother": ",",
+      "sister": "⇧,",
+      "space": "Space"
+    },
+    "inspector": {
+      "label": "Person card",
+      "back": "Back",
+      "backTitle": "Back (Alt+←)",
+      "forward": "Forward",
+      "forwardTitle": "Forward (Alt+→)",
+      "center": "Show on the tree",
+      "centerTitle": "Show on the tree (1)",
+      "close": "Close the card",
+      "closeTitle": "Close (Esc)",
+      "birth": "Birth",
+      "death": "Death",
+      "parents": "Parents",
+      "noParents": "No parents yet.",
+      "noParentsFather": "No parents yet — the father is probably {father}.",
+      "pickFromTree": "Pick from the tree",
+      "unlinkParent": "Unlink the parent",
+      "families": "Marriages and children",
+      "unlinkPartner": "Unlink the spouse",
+      "children": "Children",
+      "unlinkChild": "Unlink the child",
+      "noFamilies": "No marriages or children yet.",
+      "anotherMarriage": "Another marriage",
+      "partnerFromTree": "Spouse from the tree",
+      "siblings": "Brothers and sisters",
+      "unlink": "Unlink",
+      "noSiblings": "None yet.",
+      "gedcomId": "GEDCOM ID: {id}",
+      "merge": "Merge with a duplicate",
+      "mergeTitle": "If this person was entered twice",
+      "delete": "Delete"
+    },
+    "fields": {
+      "surname": "Surname",
+      "givenName": "Given name",
+      "patronymic": "Patronymic",
+      "patronymicSuggestion": "Use the patronymic from the father's name",
+      "birthSurname": "{sex, select, M {Surname at birth} other {Maiden name}}",
+      "birthSurnamePlaceholder": "If different",
+      "sex": "Sex",
+      "male": "Male",
+      "female": "Female",
+      "unknownSex": "Unknown",
+      "date": "Date",
+      "place": "Place",
+      "placePlaceholder": "Town, village",
+      "datePlaceholder": "e.g. abt. 1900",
+      "deathDatePlaceholder": "if known",
+      "dateUnrecognized": "Not recognized — will be saved as text",
+      "note": "Note",
+      "notePlaceholder": "Occupation, where they lived, sources…",
+      "marriageDate": "Marriage date",
+      "marriageDatePlaceholder": "e.g. 1921",
+      "marriagePlace": "Marriage place"
+    },
+    "family": {
+      "with": "With {name}",
+      "noSecondParent": "Second parent not specified"
+    },
+    "childFamily": {
+      "title": "Which family was the child born into?",
+      "message": "{name} has several marriages.",
+      "children": "{count, plural, =0 {No children yet} one {# child} other {# children}}",
+      "otherParent": "Another parent, not in the tree",
+      "otherParentDetail": "Create a separate family"
+    },
+    "pick": {
+      "parent": "Choose a parent for: {name}",
+      "partner": "Choose a spouse for: {name}",
+      "child": "Choose a child for: {name}",
+      "sibling": "Choose a brother or sister for: {name}",
+      "duplicate": "Merge “{name}” with whom? Choose the duplicate",
+      "placeholder": "Find a person in the tree…"
+    },
+    "merge": {
+      "title": "Merge two people?",
+      "message": "The card “{keep}” ({keepYears}) stays. Links and missing details move to it from the card “{remove}” ({removeYears}), and the second card is deleted. You can undo this.",
+      "noDates": "no dates",
+      "confirm": "Merge"
+    },
+    "replace": {
+      "title": "Replace the current tree?",
+      "confirm": "Replace",
+      "warning": "The current tree will be replaced. A copy is kept in “Autosaved versions”, but it is better to save GEDCOM first.",
+      "openFile": "Open “{name}” ({count, plural, one {# person} other {# people}})?",
+      "openBackup": "Open the backup “{name}” ({count, plural, one {# person} other {# people}})?",
+      "restore": "Restore the version from {date}?"
+    },
+    "history": {
+      "add": "{relation, select, father {Father} mother {Mother} partner {Spouse} brother {Brother} sister {Sister} son {Son} daughter {Daughter} other {Relative}} for {name}",
+      "link": "Link: {kind, select, parent {parent {name}} partner {marriage to {name}} sibling {sibling {name}} other {child {name}}}",
+      "unlink": "Unlink {a} and {b}",
+      "delete": "Delete {name}",
+      "merge": "Merge {name}",
+      "verified": "Checked: {name}",
+      "unverified": "Unmarked: {name}",
+      "newPerson": "New person",
+      "title": "Tree name",
+      "edit": "Edit: {name}",
+      "editMarriage": "Edit marriage"
+    },
+    "toast": {
+      "unlinked": "The link between “{a}” and “{b}” was removed",
+      "deleted": "“{name}” was deleted from the tree",
+      "merged": "“{remove}” was merged into “{keep}”",
+      "allVerified": "Everyone in the tree is checked",
+      "gedcomSaved": "The GEDCOM file was saved to Downloads",
+      "undo": "Undo",
+      "close": "Close the notification"
+    },
+    "commands": {
+      "add": "Add a person without relatives",
+      "addKeywords": "new create",
+      "save": "Save GEDCOM",
+      "saveKeywords": "export download file",
+      "open": "Open GEDCOM…",
+      "openKeywords": "import load",
+      "fit": "Show the whole tree",
+      "reviewOn": "Turn review mode on",
+      "reviewOff": "Turn review mode off",
+      "reviewKeywords": "verify check mark",
+      "nextUnverified": "Go to the next unchecked person",
+      "nextUnverifiedKeywords": "review verify",
+      "issues": "Data issues ({count, number})",
+      "issuesKeywords": "errors duplicates"
+    },
+    "palette": {
+      "label": "Search",
+      "placeholder": "Name, surname, year or place…",
+      "people": "People · {count}{more}",
+      "recent": "Recent",
+      "commands": "Commands",
+      "nothing": "Nobody found. Try part of a surname, a name or a birth year.",
+      "startTyping": "Start typing a name.",
+      "hintSelect": "select",
+      "hintOpen": "open",
+      "hintClose": "close"
+    },
+    "dialog": {
+      "cancel": "Cancel",
+      "close": "Close"
+    },
+    "shortcuts": {
+      "label": "Keys",
+      "title": "Working from the keyboard",
+      "intro": "Letter keys work in any keyboard layout when the cursor is not in a text field. The mouse wheel or touchpad moves the tree; Ctrl + wheel or pinch zooms.",
+      "ok": "Got it",
+      "search": "Find a person or a command",
+      "save": "Save GEDCOM",
+      "undo": "Undo",
+      "redo": "Redo",
+      "addFather": "Add a father",
+      "addMother": "Add a mother",
+      "addSon": "Add a son",
+      "addDaughter": "Add a daughter",
+      "addPartner": "Add a spouse",
+      "addSibling": "Add a brother / sister",
+      "parentChild": "Go to a parent / child",
+      "neighbour": "Neighbouring card",
+      "history": "Back / forward in history",
+      "editName": "Edit the name",
+      "showSelected": "Show the selected person",
+      "wholeTree": "Whole tree",
+      "delete": "Delete the person",
+      "deselect": "Deselect / close",
+      "review": "Review mode: mark / unmark"
+    },
+    "snapshots": {
+      "title": "Autosaved versions",
+      "intro": "Every 10 minutes of work and before a tree is replaced, a copy is saved in this browser. Restoring replaces the current tree (a copy of it is saved too).",
+      "empty": "No versions yet.",
+      "people": "{count, plural, one {# person} other {# people}}"
+    },
+    "table": {
+      "label": "Everyone",
+      "filter": "Filter people",
+      "filterPlaceholder": "Filter: name, surname, year, place…",
+      "status": "Review status",
+      "statusAll": "All",
+      "statusTodo": "Unchecked only",
+      "statusOk": "Checked only",
+      "count": "{shown, number} of {total, number}",
+      "name": "Full name",
+      "years": "Years",
+      "birthPlace": "Birthplace",
+      "parents": "Parents",
+      "children": "Children"
+    },
+    "issues": {
+      "title": "Data issues",
+      "intro": "Hints that help catch transcription mistakes. They never block saving.",
+      "none": "No issues",
+      "noneHint": "Dates, links and names look consistent.",
+      "merge": "Merge",
+      "more": "…and {count} more",
+      "gedcomTitle": "Notes on the source GEDCOM",
+      "kinds": {
+        "noName": "No name",
+        "noSex": "Sex not specified",
+        "isolated": "No relatives",
+        "badDate": "Unrecognized date",
+        "deathBeforeBirth": "Death before birth",
+        "parentTooYoung": "Parent too young",
+        "parentTooOld": "Parent too old",
+        "bornAfterParentDeath": "Born after a parent's death",
+        "duplicate": "Possible duplicate"
+      },
+      "messages": {
+        "noName": "Given name and surname are empty",
+        "noSex": "{name}: sex not specified",
+        "isolated": "{name} is not linked to anyone in the tree",
+        "badDate": "{name}: the {event, select, birth {birth} other {death}} date “{value}” is not recognized and will be saved as text",
+        "deathBeforeBirth": "{name}: death ({death}) before birth ({birth})",
+        "parentTooYoung": "{related} is a parent at {age} ({name}, {year})",
+        "parentTooOld": "{related} is a parent at {age} ({name}, {year})",
+        "bornAfterParentDeath": "{name} was born in {year}, after the death of {related} ({death})",
+        "duplicate": "{name} and {related} may be the same person"
+      }
+    },
+    "gedcomWarnings": {
+      "missingRef": "Line {line}: the reference @{target}@ was not found; the original line is kept.",
+      "familyLinkHidden": "Family @{xref}@: the link {tag} {value} is not shown; the original line is kept.",
+      "unconfirmedLink": "@{xref}@: {tag} {value} is not confirmed by the family record. Check the links in the source."
+    },
+    "errors": {
+      "unknown": "Something went wrong.",
+      "storageRead": "Could not read the browser storage.",
+      "draftFormat": "The draft has an unsupported format. It was left unchanged.",
+      "backupTooLarge": "The file is too large: {max} MB at most.",
+      "notBackup": "This is not a Family Tree Studio backup (invalid JSON).",
+      "demoSize": "Demo size: from {min} to {max, number} people.",
+      "layoutTimeout": "The layout took longer than a minute.",
+      "layoutWorkerFailed": "Could not compute the layout.",
+      "layoutFailed": "Could not lay out the tree.",
+      "gedcomTimeout": "Processing GEDCOM took longer than a minute. The current tree was not changed.",
+      "gedcomWorkerFailed": "Could not start GEDCOM processing. The current tree was not changed.",
+      "gedcomFailed": "Could not process the GEDCOM file.",
+      "fileTooLarge": "The largest GEDCOM file is {max} MB.",
+      "bothParentsReplace": "This person already has both parents. To replace a parent, unlink the current one first.",
+      "fatherExists": "The father is already specified.",
+      "motherExists": "The mother is already specified.",
+      "chooseChildFamily": "Choose which family the child was born into.",
+      "parentIsDescendant": "This person is a descendant of the selected one. The link would create a cycle.",
+      "alreadyParent": "This person is already a parent.",
+      "bothParents": "This person already has both parents.",
+      "selfLink": "A person cannot be linked to themselves.",
+      "alreadyPartners": "These people are already married.",
+      "partnerLineage": "An ancestor and a descendant cannot be married.",
+      "childIsAncestor": "The selected person is an ancestor of this person. The link would create a cycle.",
+      "alreadyChild": "This person is already a child.",
+      "otherParents": "This person already has other parents. Unlink them if the link is wrong.",
+      "alreadySiblings": "These people are already brothers or sisters.",
+      "bothHaveParents": "Both already have parents. Merge the families through the parents.",
+      "siblingLineage": "An ancestor and a descendant cannot be siblings.",
+      "sharedChildren": "This couple has children together. Unlink the children or delete one of the spouses first.",
+      "siblingsViaParents": "Siblings are linked through their parents. Unlink the person from the parents.",
+      "mergeSelf": "Choose another person.",
+      "mergeSexMismatch": "These people have different sexes. If this is one person, correct the sex of one of them first.",
+      "mergeOwnParent": "After merging, the person would be their own parent. Check the links.",
+      "mergeOwnAncestor": "After merging, the person would be their own ancestor. Check that this really is one person.",
+      "nulChars": "The file contains null characters. UTF-16 is not supported yet; a UTF-8 GEDCOM is needed.",
+      "badLine": "Line {line}: could not read the GEDCOM structure.",
+      "badNesting": "Line {line}: GEDCOM level nesting is broken.",
+      "xrefLevel": "Line {line}: a record identifier is only allowed at level 0.",
+      "duplicateXref": "The identifier @{xref}@ is repeated. The current draft was not changed.",
+      "headTrlr": "A GEDCOM file must start with 0 HEAD and end with 0 TRLR.",
+      "duplicateHead": "The GEDCOM header or trailer is repeated in the file.",
+      "unsupportedVersion": "GEDCOM version {version} is not supported. Version 5.5.1 or 7.0 is needed.",
+      "missingVersion": "The GEDCOM version is not specified. Version 5.5.1 or 7.0 is needed.",
+      "unsupportedCharset": "The {charset} encoding is not supported yet. Export the source file in UTF-8.",
+      "missingCharset": "The GEDCOM 5.5.1 file has no CHAR encoding. Choose UTF-8 when exporting from the source program.",
+      "gedcom7Ascii": "GEDCOM 7 must use UTF-8.",
+      "asciiNonAscii": "The file is declared as ASCII but contains non-ASCII characters. Check its encoding.",
+      "ancestryCycle": "A parentage cycle was found: a person is their own ancestor. Fix the links in the source file before importing.",
+      "personNoXref": "Line {line}: a person has no identifier.",
+      "tooManyPeople": "This version can open at most {max, number} people.",
+      "familyNoXref": "Line {line}: a family has no identifier.",
+      "tooManyPartners": "Family @{xref}@: more than two spouses (HUSB/WIFE). Such files are not supported yet.",
+      "xrefConflict": "A person identifier conflicts with an internal family node; this file is not supported yet.",
+      "utf16": "UTF-16 is not supported yet. Export the GEDCOM file in UTF-8.",
+      "invalidUtf8": "The file is not valid UTF-8. Other encodings are not supported yet.",
+      "controlChars": "{id}: a field contains invalid control characters.",
+      "multilineField": "{id}: names, dates and places must fit on one line.",
+      "slashInName": "{id}: the / character is reserved in GEDCOM for surname delimiters.",
+      "multilineMarriage": "Family {id}: the marriage date and place must fit on one line.",
+      "contNesting": "Line {line}: non-standard nesting of a text continuation. This field cannot be changed yet without losing data.",
+      "nameDelimiters": "The name of @{xref}@ has non-standard delimiters. It cannot be changed safely in this version.",
+      "nameMismatch": "The NAME and GIVN/SURN fields of @{xref}@ disagree. Fix them in the source program first.",
+      "idTaken": "The identifier @{id}@ is already taken in the source file. Export stopped to avoid damaging the data.",
+      "asciiOverflow": "The new characters do not fit the source ASCII encoding. Open a UTF-8 version of this GEDCOM or save your edits to a JSON backup."
+    }
+  },
+  "viewer": {
+    "app": {
+      "heading": "Visualizer",
+      "subtitle": "Radial family tree from a GEDCOM file"
+    },
+    "legend": {
+      "male": "Men",
+      "female": "Women",
+      "unknown": "Sex unknown"
+    },
+    "actions": {
+      "load": "Load GEDCOM",
+      "sample": "Sample",
+      "export": "Download JPEG",
+      "fit": "Fit to view",
+      "back": "← Back"
+    },
+    "fields": {
+      "rootFamily": "Root family",
+      "canvasSize": "Canvas size",
+      "search": "Search",
+      "searchPlaceholder": "Name — Enter to show it"
+    },
+    "groups": {
+      "layout": "Layout",
+      "card": "Cell",
+      "style": "Style"
+    },
+    "controls": {
+      "chartStyle": "Look",
+      "chartStyleOptions": {
+        "fan": "Fan",
+        "cards": "Cards and lines"
+      },
+      "fanAngle": "Opening",
+      "shapeStretch": "Stretch (100% = circle)",
+      "compactness": "Density",
+      "arcRings": "Names along the ring",
+      "arcRingsAuto": "auto ({count})",
+      "cardSpacing": "Gap between cells",
+      "familyGap": "Gap between families",
+      "ringGap": "Gap between rings",
+      "fontSize": "Font size",
+      "boldFont": "Bold font",
+      "showYears": "Years of life",
+      "showBothSpouses": "Show spouses",
+      "spousesBeside": "Spouses side by side",
+      "cardLength": "Longest cell",
+      "cardThickness": "Narrowest cell",
+      "colorMode": "Color",
+      "colorModeOptions": {
+        "branch": "By branch",
+        "sex": "By sex"
+      },
+      "showSexStrip": "Sex strip",
+      "maleColor": "Color — male",
+      "femaleColor": "Color — female",
+      "borderColor": "Border color",
+      "lineColor": "Line color",
+      "lineWidth": "Line width",
+      "showRings": "Generation rings",
+      "ringColor": "Ring color",
+      "canvasColor": "Canvas color"
+    },
+    "printSizes": {
+      "a3": "A3 (300 DPI) — 4961 × 3508",
+      "a2": "A2 (300 DPI) — 7016 × 4961",
+      "a1": "A1 (300 DPI) — 9933 × 7016",
+      "a0": "A0 (300 DPI) — 14043 × 9933",
+      "fullhd": "Full HD — 1920 × 1080",
+      "4k": "4K UHD — 3840 × 2160",
+      "square": "Square — 2400 × 2400"
+    },
+    "status": {
+      "stats": "Shown: {people, plural, one {# person} other {# people}} · {families, plural, one {# family} other {# families}} · {generations, plural, one {# generation} other {# generations}}",
+      "rootOption": "{label} ({count, plural, one {# descendant} other {# descendants}})",
+      "exporting": "Exporting {size}…",
+      "saved": "Saved: {size}",
+      "exportError": "Export error: {message}",
+      "error": "Error: {message}",
+      "readFileError": "Failed to read the file",
+      "loadFirst": "Load a GEDCOM file or open the sample first",
+      "found": "{count, plural, one {# match} other {# matches}}"
+    },
+    "errors": {
+      "emptyGedcom": "Empty GEDCOM",
+      "noFamilies": "No families (FAM records) found in the file",
+      "familyNotFound": "Family {id} not found",
+      "canvasUnavailable": "Canvas 2D is unavailable",
+      "rasterizeFailed": "Failed to rasterize the SVG",
+      "jpegFailed": "Failed to encode the JPEG"
+    },
+    "life": {
+      "born": "b. {year}",
+      "died": "d. {year}"
+    }
+  }
+}

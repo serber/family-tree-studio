@@ -1,0 +1,20 @@
+/*
+ * Family Tree Studio — shared stylesheet, imported first by every page.
+ *
+ * Cascade layers, lowest priority first:
+ *   base       tokens, element reset and defaults
+ *   vendor     third-party CSS (React Flow), above the reset, below our components
+ *   components shared building blocks: buttons, inputs, brand, language switch
+ *   app        page-specific styles (landing, editor, viewer)
+ *   utilities  single-purpose helpers that must win
+ *
+ * A later layer wins regardless of selector specificity, so page styles never
+ * need extra specificity to override a component.
+ */
+@layer base, vendor, components, app, utilities;
+
+@import './fonts.css';
+@import './tokens.css' layer(base);
+@import './base.css' layer(base);
+@import './components.css' layer(components);
+@import './utilities.css' layer(utilities);

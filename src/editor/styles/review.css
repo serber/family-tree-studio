@@ -1,0 +1,89 @@
+/* Review mode: toggle, progress, verify bar, status dots. */
+@layer app {
+  .review-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 34px;
+    padding: 0 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-2);
+    white-space: nowrap;
+  }
+
+  .review-toggle:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+
+  .review-toggle[aria-pressed="true"] {
+    border-color: var(--ok);
+    background: var(--ok-soft);
+    color: var(--text);
+  }
+
+  .review-progress {
+    width: 64px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--todo-soft);
+    overflow: hidden;
+  }
+
+  .review-progress > span {
+    display: block;
+    height: 100%;
+    background: var(--ok);
+    border-radius: 3px;
+    transition: width .2s;
+  }
+
+  .verify-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .verify-bar.todo {
+    background: var(--todo-soft);
+  }
+
+  .verify-bar.ok {
+    background: var(--ok-soft);
+  }
+
+  .verify-bar .status {
+    flex: 1;
+    min-width: 0;
+    font-size: 12.5px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .verify-bar .status small {
+    font-weight: 500;
+    color: var(--text-3);
+  }
+
+  .status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-dot.ok {
+    background: var(--ok);
+  }
+
+  .status-dot.todo {
+    background: var(--todo);
+  }
+}

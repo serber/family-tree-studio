@@ -1,0 +1,181 @@
+/* Home page. Same tokens and components as the editor; layout only here. */
+@layer app {
+  .landing {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background:
+      radial-gradient(1100px 560px at 50% -12%, var(--accent-soft), transparent 70%),
+      radial-gradient(circle, var(--border-strong) 1.2px, transparent 1.3px) 0 0 / 22px 22px,
+      var(--canvas);
+    background-attachment: fixed;
+  }
+
+  .landing-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px clamp(16px, 4vw, 40px);
+  }
+
+  .landing-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 40px 16px 72px;
+    text-align: center;
+  }
+
+  .landing-eyebrow {
+    margin: 0;
+    padding: 5px 12px;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--surface) 80%, transparent);
+    font-size: 12.5px;
+    font-weight: 650;
+    color: var(--accent);
+  }
+
+  .landing-hero h1 {
+    max-width: 17ch;
+    margin: 0;
+    font-size: clamp(32px, 5.2vw, 52px);
+    font-weight: 750;
+    line-height: 1.08;
+    letter-spacing: -.035em;
+    text-wrap: balance;
+  }
+
+  .landing-intro {
+    max-width: 56ch;
+    margin: 0;
+    font-size: clamp(15px, 1.6vw, 17px);
+    line-height: 1.6;
+    color: var(--text-2);
+    text-wrap: pretty;
+  }
+
+  /* The two entry points: medium-sized, side by side, stacked on narrow screens. */
+  .landing-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 270px));
+    gap: 14px;
+    margin-top: 14px;
+  }
+
+  .landing-action {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-md);
+    color: var(--text);
+    text-align: left;
+    text-decoration: none;
+    transition: transform var(--duration) var(--ease-out), box-shadow var(--duration) var(--ease-out), border-color var(--duration-fast), background-color var(--duration-fast);
+  }
+
+  .landing-action:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .landing-action-icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: var(--radius);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .landing-action-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .landing-action-text strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .landing-action-text small {
+    display: block;
+    margin-top: 2px;
+    font-size: 12.5px;
+    color: var(--text-3);
+  }
+
+  .landing-action-arrow {
+    flex-shrink: 0;
+    color: var(--text-3);
+    transition: transform var(--duration) var(--ease-out), color var(--duration-fast);
+  }
+
+  .landing-action:hover .landing-action-arrow {
+    transform: translateX(3px);
+    color: var(--accent);
+  }
+
+  .landing-action-primary {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-text);
+  }
+
+  .landing-action-primary:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+
+  .landing-action-primary .landing-action-icon {
+    background: color-mix(in srgb, var(--accent-text) 16%, transparent);
+    color: inherit;
+  }
+
+  .landing-action-primary .landing-action-text small,
+  .landing-action-primary .landing-action-arrow,
+  .landing-action-primary:hover .landing-action-arrow {
+    color: color-mix(in srgb, var(--accent-text) 78%, transparent);
+  }
+
+  .landing-note {
+    max-width: 56ch;
+    margin: 8px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-3);
+  }
+
+  .landing-note svg {
+    margin-right: 6px;
+    vertical-align: -3px;
+    color: var(--accent);
+  }
+
+  .landing-footer {
+    padding: 18px 16px 24px;
+    font-size: 12.5px;
+    color: var(--text-3);
+    text-align: center;
+  }
+
+  @media (max-width: 620px) {
+    .landing-actions {
+      grid-template-columns: minmax(0, 340px);
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

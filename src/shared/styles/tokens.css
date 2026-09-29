@@ -1,0 +1,131 @@
+/*
+ * Design tokens. Colors come in a light and a dark set; everything else is theme-independent.
+ * Components and pages reference tokens only — no raw colors outside this file,
+ * except where a color is data (chart colors are user settings).
+ */
+:root {
+  /* Typography */
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-chart: 'Spectral', Georgia, 'Times New Roman', serif;
+
+  /* Shape */
+  --radius-xs: 5px;
+  --radius-sm: 7px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-pill: 999px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(.2, .7, .3, 1);
+  --duration-fast: .12s;
+  --duration: .18s;
+
+  /* Surfaces and text */
+  --bg: #f4f5f2;
+  --canvas: #f7f8f5;
+  --surface: #ffffff;
+  --surface-2: #f6f7f4;
+  --surface-3: #eef0ec;
+  --border: #e3e6e0;
+  --border-strong: #cfd4cc;
+  --text: #1f2a24;
+  --text-2: #56625a;
+  --text-3: #8a948c;
+
+  /* Accent and states */
+  --accent: #2f7a58;
+  --accent-hover: #26684a;
+  --accent-soft: #e5f1ea;
+  --accent-text: #ffffff;
+  --danger: #b4452f;
+  --danger-soft: #fbeae6;
+  --warning: #a86b12;
+  --warning-soft: #fdf3e1;
+  --ok: #23945a;
+  --ok-soft: #d9f2e4;
+  --todo: #e0443f;
+  --todo-soft: #fde0de;
+
+  /* People */
+  --male: #4f7fd9;
+  --male-soft: #e8effc;
+  --female: #d45f82;
+  --female-soft: #fbe9ef;
+  --unknown: #9aa19c;
+  --unknown-soft: #eff1ee;
+  --male-card: #edf3fe;
+  --male-card-border: #c5d6f6;
+  --female-card: #fdeff4;
+  --female-card-border: #f0c6d5;
+  --unknown-card: #f2f3f1;
+  --unknown-card-border: #d8dcd6;
+
+  /* Tree lines */
+  --edge: #b3bdb6;
+  --edge-strong: #2f7a58;
+
+  /* Overlays */
+  --scrim: rgba(12, 18, 15, .38);
+  --toast-bg: #1f2a24;
+  --toast-bg-error: #6b2417;
+  --toast-text: #eef3ef;
+  --toast-action: #9ee0bd;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(20, 30, 25, .06), 0 1px 1px rgba(20, 30, 25, .04);
+  --shadow-md: 0 4px 16px rgba(20, 30, 25, .08), 0 1px 3px rgba(20, 30, 25, .06);
+  --shadow-lg: 0 18px 50px rgba(20, 30, 25, .18), 0 4px 12px rgba(20, 30, 25, .08);
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121614;
+    --canvas: #151a17;
+    --surface: #1b211e;
+    --surface-2: #202823;
+    --surface-3: #27302b;
+    --border: #2c3530;
+    --border-strong: #3b4640;
+    --text: #e7ece8;
+    --text-2: #aab5ae;
+    --text-3: #76827a;
+
+    --accent: #4fb386;
+    --accent-hover: #62c496;
+    --accent-soft: #1f3a2d;
+    --accent-text: #0d1a13;
+    --danger: #ec7a62;
+    --danger-soft: #3a211b;
+    --warning: #e0a548;
+    --warning-soft: #362a15;
+    --ok: #4cc585;
+    --ok-soft: #173826;
+    --todo: #ff6b63;
+    --todo-soft: #45201e;
+
+    --male: #7aa2f0;
+    --male-soft: #1f2a40;
+    --female: #ee8aa7;
+    --female-soft: #3b2029;
+    --unknown: #8d968f;
+    --unknown-soft: #262d29;
+    --male-card: #1c2638;
+    --male-card-border: #30446a;
+    --female-card: #2f1e27;
+    --female-card-border: #5a3447;
+    --unknown-card: #222926;
+    --unknown-card-border: #3a4540;
+
+    --edge: #4a5650;
+    --edge-strong: #4fb386;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, .35);
+    --shadow-lg: 0 18px 50px rgba(0, 0, 0, .5);
+
+    color-scheme: dark;
+  }
+}

@@ -1,0 +1,6 @@
+/*
+ * Self-hosted fonts: no request leaves the site.
+ * Manrope (variable, 200–800) is the interface font everywhere.
+ * Spectral is only for text inside the radial chart (the viewer imports its faces).
+ */
+@import '@fontsource-variable/manrope/wght.css';

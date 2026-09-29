@@ -1,0 +1,38 @@
+{
+  "name": "family-tree-studio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Family Tree Studio: a GEDCOM family tree editor and a radial tree visualizer",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.viewer.json",
+    "build": "npm run typecheck && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@dagrejs/dagre": "^3.1.1",
+    "@fontsource-variable/manrope": "^5.3.0",
+    "@fontsource/spectral": "^5.3.0",
+    "@xyflow/react": "^12.12.0",
+    "d3": "^7.9.0",
+    "idb-keyval": "^6.3.0",
+    "intl-messageformat": "^12.1.2",
+    "lucide-react": "^1.48.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/d3": "^7.4.3",
+    "@types/node": "^26.6.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
+  }
+}

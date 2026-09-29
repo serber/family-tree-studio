@@ -1,0 +1,102 @@
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { expect, test, type Page } from '@playwright/test'
+
+const fixturePath = fileURLToPath(new URL('./fixtures/family-7.ged', import.meta.url))
+const original = readFileSync(fixturePath, 'utf8')
+const panel = (page: Page) => page.getByRole('complementary', { name: 'Карточка человека' })
+const field = (page: Page, name: string) => panel(page).locator(`[name="${name}"]`)
+
+async function saveGedcom(page: Page): Promise<string> {
+  const download = page.waitForEvent('download')
+  await page.keyboard.press('Control+s')
+  const path = await (await download).path()
+  return readFileSync(path!, 'utf8')
+}
+
+test('imports a GEDCOM, edits one person, reloads, and exports only the intended change', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.goto('/ru/editor/')
+  await page.getByTestId('gedcom-input').setInputFiles(fixturePath)
+  await expect(field(page, 'givenName')).toHaveValue('Иван')
+  await field(page, 'givenName').fill('Альберт')
+  await field(page, 'givenName').press('Enter')
+  await expect(page.getByTestId('save-status')).toContainText('Сохранено в браузере')
+  await page.reload()
+  await expect(page.locator('.react-flow__node-person')).toHaveCount(3)
+  const expected = original.replace('1 NAME Иван /Леснов/', '1 NAME Альберт /Леснов/').replace('2 GIVN Иван', '2 GIVN Альберт')
+  expect(await saveGedcom(page)).toBe(expected)
+  await expect(page.getByTestId('save-status')).toContainText('выгружено')
+  expect(errors).toEqual([])
+})
+
+test('adds relatives to an imported file and exports reciprocal links while keeping the source', async ({ page }) => {
+  await page.goto('/ru/editor/')
+  await page.getByTestId('gedcom-input').setInputFiles(fixturePath)
+  await expect(field(page, 'givenName')).toHaveValue('Иван')
+  await page.keyboard.press('KeyJ')
+  await page.keyboard.type('Фёдор')
+  await page.keyboard.press('Escape')
+  const output = await saveGedcom(page)
+  expect(output).toContain('_CUSTOM Keep exactly')
+  expect(output).toContain('0 @I4@ INDI\n1 NAME Фёдор /Леснов/\n2 GIVN Фёдор\n2 SURN Леснов\n1 SEX M\n1 FAMS @F4@\n')
+  expect(output).toContain('0 @F4@ FAM\n1 HUSB @I4@\n1 CHIL @I1@\n0 TRLR')
+  expect(output).toContain('1 FAMS @F1@\n1 FAMC @F4@\n')
+
+  await page.getByTestId('gedcom-input').setInputFiles({ name: 'reopened.ged', mimeType: 'text/plain', buffer: Buffer.from(output) })
+  await expect(page.getByLabel('Название дерева')).toHaveValue('reopened')
+  await expect(page.locator('.react-flow__node-person')).toHaveCount(4)
+  await page.keyboard.press('Control+k')
+  await page.keyboard.type('Фёдор')
+  await page.keyboard.press('Enter')
+  await expect(panel(page).locator('.relative-row').filter({ hasText: 'Иван' })).toBeVisible()
+})
+
+test('keeps the current tree when an import is invalid or cancelled', async ({ page }) => {
+  await page.goto('/ru/editor/')
+  await page.getByRole('button', { name: /Начать новое дерево/ }).click()
+  await page.keyboard.type('Несохранённый')
+  await page.getByTestId('gedcom-input').setInputFiles({ name: 'broken.ged', mimeType: 'text/plain', buffer: Buffer.from('Not a GEDCOM') })
+  await expect(page.getByRole('alert')).toContainText('не удалось прочитать')
+  await expect(page.locator('.react-flow__node-person')).toContainText('Несохранённый')
+  await page.getByTestId('gedcom-input').setInputFiles(fixturePath)
+  await page.getByRole('button', { name: 'Отмена' }).click()
+  await expect(page.locator('.react-flow__node-person')).toHaveCount(1)
+  await expect(page.locator('.react-flow__node-person')).toContainText('Несохранённый')
+})
+
+test('reports unresolved links in the checks view and preserves them in an unchanged export', async ({ page }) => {
+  await page.goto('/ru/editor/')
+  const input = original.replace('1 CHIL @I3@', '1 CHIL @MISSING@')
+  await page.getByTestId('gedcom-input').setInputFiles({ name: 'warnings.ged', mimeType: 'text/plain', buffer: Buffer.from(input) })
+  await expect(page.locator('.react-flow__node-person')).toHaveCount(3)
+  await page.getByRole('button', { name: /Замечания/ }).click()
+  await expect(page.getByText('Замечания к исходному GEDCOM')).toBeVisible()
+  await expect(page.getByText(/@MISSING@/).first()).toBeVisible()
+  expect(await saveGedcom(page)).toBe(input)
+})
+
+test('exports a tree created from scratch as valid GEDCOM that reopens identically', async ({ page }) => {
+  await page.goto('/ru/editor/')
+  await page.getByRole('button', { name: /Начать новое дерево/ }).click()
+  await page.keyboard.type('Мария')
+  await field(page, 'surname').fill('Орлова')
+  await panel(page).getByRole('button', { name: 'Женский' }).click()
+  await field(page, 'birthSurname').fill('Белова')
+  await field(page, 'birthDate').fill('12.03.1901')
+  await field(page, 'birthDate').press('Enter')
+  await page.keyboard.press('KeyJ')
+  await expect(field(page, 'surname')).toHaveValue('Белов')
+  await page.keyboard.type('Николай')
+  await page.keyboard.press('Escape')
+  const output = await saveGedcom(page)
+  expect(output).toMatch(/^0 HEAD\n1 SOUR FAMILY_TREE_STUDIO\n/)
+  expect(output).toContain('1 NAME Мария /Орлова/\n2 GIVN Мария\n2 SURN Орлова\n1 NAME Мария /Белова/\n2 TYPE birth\n2 SURN Белова\n1 SEX F\n1 BIRT\n2 DATE 12 MAR 1901\n')
+  expect(output).toContain('1 NAME Николай /Белов/')
+  expect(output.endsWith('0 TRLR\n')).toBe(true)
+  await page.getByTestId('gedcom-input').setInputFiles({ name: 'mine.ged', mimeType: 'text/plain', buffer: Buffer.from(output) })
+  await expect(page.getByLabel('Название дерева')).toHaveValue('mine')
+  await expect(page.locator('.react-flow__node-person')).toHaveCount(2)
+  expect(await saveGedcom(page)).toBe(output)
+})

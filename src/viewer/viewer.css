@@ -1,0 +1,415 @@
+/*
+ * Visualizer page. Chrome uses the shared tokens; the chart itself is drawn
+ * with presentation attributes from the user's settings (see render/), so it
+ * looks the same on screen and in the exported JPEG in either theme.
+ */
+@import '@fontsource/spectral/400.css';
+@import '@fontsource/spectral/600.css';
+
+@layer app {
+  /* ---------- Shell ---------- */
+  .viewer {
+    display: flex;
+    height: 100dvh;
+    width: 100%;
+    overflow: hidden;
+
+    /* Legend swatches follow the male/female card colors; set at runtime from the settings. */
+    --legend-male: #d8e7f8;
+    --legend-female: #fadbe7;
+    --legend-unknown: #e9e6dd;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .viewer-sidebar {
+    width: 392px;
+    flex: 0 0 392px;
+    height: 100%;
+    overflow-y: auto;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 16px 20px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+
+  .viewer-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+
+  .brand-text small {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--text-3);
+  }
+
+  .viewer-subtitle {
+    margin: 12px 0 0;
+    font-size: 12.5px;
+    color: var(--text-2);
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--text-2);
+  }
+
+  .legend > span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .legend-swatch {
+    display: inline-block;
+    width: 22px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1px solid rgba(31, 42, 68, .14);
+  }
+
+  .legend-swatch-male {
+    background: var(--legend-male);
+  }
+
+  .legend-swatch-female {
+    background: var(--legend-female);
+  }
+
+  .legend-swatch-unknown {
+    background: var(--legend-unknown);
+  }
+
+  .data-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .file-btn {
+    flex: 1;
+  }
+
+  .file-btn input {
+    display: none;
+  }
+
+  .viewer-field {
+    display: grid;
+    gap: 6px;
+  }
+
+  .viewer-field-label {
+    font-size: 11.5px;
+    font-weight: 650;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .viewer-field .btn-primary {
+    margin-top: 6px;
+  }
+
+  /* ---------- Settings groups (built by ui/controls.ts) ---------- */
+  .settings-panels {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .settings-group {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .settings-group > summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: var(--surface-2);
+    cursor: pointer;
+    user-select: none;
+    font-size: 13.5px;
+    font-weight: 650;
+    color: var(--text);
+  }
+
+  .settings-group > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .settings-group > summary::after {
+    content: '';
+    width: 7px;
+    height: 7px;
+    margin-right: 3px;
+    border-right: 1.6px solid var(--text-3);
+    border-bottom: 1.6px solid var(--text-3);
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform var(--duration) var(--ease-out);
+  }
+
+  .settings-group:not([open]) > summary::after {
+    transform: rotate(-45deg);
+  }
+
+  .settings-group[open] > summary {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .settings-group-body {
+    padding: 12px 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  /* ---------- Controls ---------- */
+  .control {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    font-size: 13px;
+    color: var(--text-2);
+  }
+
+  .control-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .control output {
+    color: var(--text-3);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    font-size: 12.5px;
+  }
+
+  .control-select {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .control-select .select {
+    flex: 0 0 52%;
+    height: 30px;
+    font-size: 12.5px;
+  }
+
+  .control input[type='range'] {
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    margin: 0;
+    border-radius: var(--radius-pill);
+    background: var(--surface-3);
+    cursor: pointer;
+  }
+
+  .control input[type='range']::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: none;
+    box-shadow: 0 0 0 4px var(--accent);
+    cursor: pointer;
+    transition: box-shadow var(--duration-fast);
+  }
+
+  .control input[type='range']::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 0 5px var(--accent);
+  }
+
+  .control input[type='range']::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    cursor: pointer;
+  }
+
+  .control input[type='range']::-moz-range-track {
+    height: 4px;
+    border-radius: var(--radius-pill);
+    background: var(--surface-3);
+  }
+
+  .control input[type='range']:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 6px;
+  }
+
+  .control input[type='color'] {
+    appearance: none;
+    width: 100%;
+    height: 34px;
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .control input[type='color']::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  .control input[type='color']::-webkit-color-swatch {
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+  }
+
+  .control-toggle {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .switch {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 23px;
+    border-radius: var(--radius-pill);
+    background: var(--border-strong);
+    position: relative;
+    transition: background-color var(--duration) var(--ease-out);
+  }
+
+  .switch::after {
+    content: '';
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: #fff;
+    top: 3px;
+    left: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+    transition: transform var(--duration) var(--ease-out);
+  }
+
+  .control-toggle input:checked + .switch {
+    background: var(--accent);
+  }
+
+  .control-toggle input:checked + .switch::after {
+    transform: translateX(17px);
+  }
+
+  .control-toggle input:focus-visible + .switch {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ---------- Stage ---------- */
+  .viewer-stage {
+    flex: 1;
+    position: relative;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--canvas);
+  }
+
+  .viewer-chart {
+    flex: 1;
+    position: relative;
+    min-height: 0;
+  }
+
+  .viewer-chart.dragover {
+    outline: 2px dashed var(--accent);
+    outline-offset: -10px;
+  }
+
+  .viewer-chart svg {
+    display: block;
+    cursor: grab;
+  }
+
+  .viewer-chart svg:active {
+    cursor: grabbing;
+  }
+
+  .viewer-bar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .viewer-bar .link-btn {
+    font-size: 13px;
+  }
+
+  .viewer-status {
+    flex: 1;
+    font-size: 12.5px;
+    color: var(--text-3);
+  }
+
+  .viewer-status.error {
+    color: var(--danger);
+  }
+
+  /* ---------- Search fading (screen only; set by TreeRenderer) ----------
+     Fill/stroke opacity on the shapes rather than opacity on the cell groups:
+     a thousand semi-transparent groups are composited one by one. */
+  .cells.searching g.cell:not(.match) path,
+  .cells.searching g.cell:not(.match) text {
+    fill-opacity: .3;
+    stroke-opacity: .3;
+  }
+
+  @media (max-width: 1000px) {
+    .viewer {
+      flex-direction: column;
+      height: auto;
+      overflow: visible;
+    }
+
+    .viewer-sidebar {
+      width: 100%;
+      flex: none;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .viewer-stage {
+      min-height: 80vh;
+    }
+  }
+}

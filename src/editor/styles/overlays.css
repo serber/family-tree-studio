@@ -1,0 +1,267 @@
+/* Overlays: command palette, dialogs, shortcuts, toast. */
+@layer app {
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--scrim);
+    display: grid;
+    justify-items: center;
+    align-items: start;
+    padding: 12vh 16px 16px;
+    animation: fade .12s ease-out;
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .palette {
+    width: min(640px, 100%);
+    background: var(--surface);
+    border-radius: 14px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 70vh;
+  }
+
+  .palette-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-3);
+  }
+
+  .palette-input input {
+    flex: 1;
+    height: 54px;
+    border: 0;
+    background: transparent;
+    font-size: 16px;
+    color: var(--text);
+  }
+
+  .palette-title {
+    padding: 12px 16px 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-3);
+  }
+
+  .palette-list {
+    overflow-y: auto;
+    padding: 6px;
+  }
+
+  .palette-group {
+    padding: 8px 10px 4px;
+    font-size: 11px;
+    font-weight: 650;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+
+  .palette-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    text-align: left;
+    min-height: 44px;
+  }
+
+  .palette-item[aria-selected="true"] {
+    background: var(--accent-soft);
+  }
+
+  .palette-item-text {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .palette-item-text strong {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .palette-item-text small {
+    display: block;
+    font-size: 12px;
+    color: var(--text-3);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+  }
+
+  .palette-item .icon {
+    width: 28px;
+    display: grid;
+    place-items: center;
+    color: var(--text-2);
+  }
+
+  .palette-empty {
+    padding: 28px 16px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 13px;
+  }
+
+  .palette-foot {
+    display: flex;
+    gap: 14px;
+    padding: 8px 14px;
+    border-top: 1px solid var(--border);
+    font-size: 11.5px;
+    color: var(--text-3);
+    background: var(--surface-2);
+  }
+
+  .palette-foot span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .dialog {
+    width: min(460px, 100%);
+    background: var(--surface);
+    border-radius: 14px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    padding: 20px;
+    margin-top: 4vh;
+  }
+
+  .dialog h2 {
+    margin: 0 0 8px;
+    font-size: 17px;
+  }
+
+  .dialog p {
+    margin: 0 0 8px;
+    color: var(--text-2);
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .choice-list {
+    display: grid;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .choice-list button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-align: left;
+    font-size: 13.5px;
+  }
+
+  .choice-list button:hover,
+  .choice-list button:focus-visible {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .choice-list small {
+    display: block;
+    color: var(--text-3);
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .shortcuts {
+    width: min(620px, 100%);
+  }
+
+  .shortcut-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 24px;
+    margin-top: 12px;
+  }
+
+  .shortcut-grid div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-2);
+    padding: 4px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .shortcut-grid div span:last-child {
+    display: flex;
+    gap: 3px;
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    z-index: 120;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 10px 10px 16px;
+    border-radius: 12px;
+    background: var(--toast-bg);
+    color: var(--toast-text);
+    box-shadow: var(--shadow-lg);
+    font-size: 13px;
+    max-width: calc(100vw - 32px);
+    animation: rise .18s ease-out;
+  }
+
+  .toast.error {
+    background: var(--toast-bg-error);
+  }
+
+  .toast button {
+    color: var(--toast-action);
+    font-weight: 650;
+    padding: 5px 9px;
+    border-radius: 7px;
+  }
+
+  .toast button:hover {
+    background: rgba(255, 255, 255, .1);
+  }
+
+  @keyframes rise {
+    from {
+      transform: translate(-50%, 10px);
+      opacity: 0;
+    }
+  }
+}

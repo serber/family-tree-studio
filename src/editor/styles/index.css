@@ -1,0 +1,12 @@
+/*
+ * Editor page styles. React Flow's stylesheet goes into the `vendor` layer so
+ * the editor's overrides below (layer `app`) win without extra specificity.
+ */
+@import '@xyflow/react/dist/style.css' layer(vendor);
+@import './shell.css';
+@import './canvas.css';
+@import './inspector.css';
+@import './overlays.css';
+@import './views.css';
+@import './welcome.css';
+@import './review.css';

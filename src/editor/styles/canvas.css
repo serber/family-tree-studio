@@ -1,0 +1,408 @@
+/* Tree canvas: React Flow overrides, person cards, "+" pills, canvas controls and states. */
+@layer app {
+  .canvas {
+    flex: 1;
+    min-height: 0;
+    background: var(--canvas);
+    position: relative;
+  }
+
+  .canvas .react-flow {
+    --xy-background-color: var(--canvas);
+    --xy-minimap-background-color: var(--surface);
+    --xy-minimap-mask-background-color: color-mix(in srgb, var(--canvas) 70%, transparent);
+  }
+
+  .canvas .react-flow__node {
+    cursor: pointer;
+  }
+
+  .canvas .react-flow__node.is-dimmed {
+    opacity: .28;
+    transition: opacity .15s;
+  }
+
+  .canvas .react-flow__node.is-new .person-card {
+    animation: pop .35s ease-out;
+  }
+
+  @keyframes pop {
+    from {
+      transform: scale(.85);
+      opacity: 0;
+    }
+
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .canvas .react-flow__handle {
+    opacity: 0;
+    pointer-events: none;
+    min-width: 0;
+    min-height: 0;
+    width: 1px;
+    height: 1px;
+    border: 0;
+  }
+
+  .canvas .react-flow__edge-path {
+    stroke: var(--edge);
+    stroke-width: 1.5;
+  }
+
+  .canvas .react-flow__edge.is-lineage .react-flow__edge-path {
+    stroke: var(--edge-strong);
+    stroke-width: 2.4;
+  }
+
+  .canvas .react-flow__edge.is-dimmed .react-flow__edge-path {
+    opacity: .35;
+  }
+
+  .canvas .react-flow__minimap {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+  }
+
+  .person-card {
+    position: relative;
+    width: 200px;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px 0 16px;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    overflow: visible;
+    transition: box-shadow .12s, border-color .12s;
+  }
+
+  .person-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    border-radius: var(--radius) 0 0 var(--radius);
+    background: var(--unknown);
+  }
+
+  .person-card.sex-M::before {
+    background: var(--male);
+  }
+
+  .person-card.sex-F::before {
+    background: var(--female);
+  }
+
+  .person-card.sex-M {
+    background: var(--male-card);
+    border-color: var(--male-card-border);
+  }
+
+  .person-card.sex-F {
+    background: var(--female-card);
+    border-color: var(--female-card-border);
+  }
+
+  .person-card.sex-U {
+    background: var(--unknown-card);
+    border-color: var(--unknown-card-border);
+  }
+
+  .person-card:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+
+  .person-card.is-unverified {
+    border: 2px solid var(--todo);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--todo) 16%, transparent), var(--shadow-sm);
+  }
+
+  .person-card.is-verified {
+    border: 2px solid var(--ok);
+  }
+
+  .person-card.is-selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent), var(--shadow-md);
+  }
+
+  .person-card.is-selected.is-unverified {
+    border-color: var(--todo);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--todo) 35%, transparent), var(--shadow-md);
+  }
+
+  .person-card.is-selected.is-verified {
+    border-color: var(--ok);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 35%, transparent), var(--shadow-md);
+  }
+
+  .review-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 800;
+    color: #fff;
+    box-shadow: 0 0 0 2px var(--canvas);
+  }
+
+  .review-badge.ok {
+    background: var(--ok);
+  }
+
+  .review-badge.todo {
+    background: var(--todo);
+  }
+
+  .person-card.detail-overview.is-unverified {
+    background: var(--todo-soft);
+  }
+
+  .person-card.detail-overview.is-verified {
+    background: var(--ok-soft);
+  }
+
+  .person-card.detail-overview .review-badge {
+    width: 40px;
+    height: 40px;
+    top: -16px;
+    right: -16px;
+    font-size: 24px;
+  }
+
+  .person-text {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .person-surname {
+    font-size: 13.5px;
+    font-weight: 700;
+    line-height: 1.2;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .person-given {
+    font-size: 12.5px;
+    line-height: 1.25;
+    color: var(--text-2);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .person-years {
+    font-size: 11.5px;
+    color: var(--text-3);
+    font-variant-numeric: tabular-nums;
+    margin-top: 1px;
+  }
+
+  .person-unnamed {
+    font-style: italic;
+    color: var(--text-3);
+    font-weight: 500;
+  }
+
+  .person-card.detail-compact {
+    padding-left: 14px;
+  }
+
+  .person-card.detail-compact .person-surname {
+    font-size: 17px;
+  }
+
+  .person-card.detail-compact .person-given {
+    font-size: 15px;
+  }
+
+  .person-card.detail-overview {
+    justify-content: center;
+  }
+
+  .person-card.detail-overview .person-surname {
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .family-junction {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--edge);
+    box-shadow: 0 0 0 2px var(--canvas);
+  }
+
+  .family-junction.is-lineage {
+    background: var(--edge-strong);
+  }
+
+  .card-actions {
+    position: absolute;
+    display: flex;
+    gap: 6px;
+    z-index: 5;
+  }
+
+  .card-actions.top {
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .card-actions.bottom {
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .add-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 24px;
+    padding: 0 9px 0 7px;
+    border-radius: 12px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    background: var(--surface);
+    color: var(--text-2);
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-md);
+    transition: background-color .1s, color .1s, border-color .1s;
+  }
+
+  .add-pill:hover {
+    background: var(--accent);
+    color: var(--accent-text);
+    border-color: var(--accent);
+  }
+
+  .add-pill kbd {
+    font-size: 9.5px;
+    padding: 1px 4px;
+    margin-left: 2px;
+    border-bottom-width: 1px;
+  }
+
+  .add-pill:hover kbd {
+    background: transparent;
+    color: inherit;
+    border-color: color-mix(in srgb, currentColor 40%, transparent);
+  }
+
+  .canvas-controls {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+  }
+
+  .canvas-controls .zoom-value {
+    min-width: 46px;
+    text-align: center;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-2);
+  }
+
+  .canvas-controls .sep {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    margin: 0 3px;
+  }
+
+  .canvas-controls .btn {
+    height: 30px;
+  }
+
+  .canvas-stats {
+    font-size: 11.5px;
+    color: var(--text-3);
+    background: color-mix(in srgb, var(--canvas) 85%, transparent);
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  .canvas-empty {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  .canvas-empty > div {
+    pointer-events: auto;
+    text-align: center;
+    display: grid;
+    gap: 12px;
+    justify-items: center;
+    color: var(--text-2);
+  }
+
+  .canvas-loading {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 6;
+    background: var(--canvas);
+    color: var(--text-2);
+  }
+
+  .canvas-loading > div {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .layout-busy {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    font-size: 12px;
+    color: var(--text-2);
+  }
+}

@@ -1,0 +1,153 @@
+/* Table and «Issues» views. */
+@layer app {
+  .table-view,
+  .issues-view {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+  }
+
+  .view-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .view-toolbar .input {
+    max-width: 340px;
+  }
+
+  .view-toolbar .count {
+    font-size: 12.5px;
+    color: var(--text-3);
+  }
+
+  .table-scroll {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+  }
+
+  .people-table {
+    width: 100%;
+    min-width: 760px;
+  }
+
+  .table-head,
+  .table-row {
+    display: grid;
+    grid-template-columns: minmax(220px, 2.2fr) 110px minmax(120px, 1fr) minmax(160px, 1.4fr) 90px;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+  }
+
+  .table-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    height: 36px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    font-size: 11.5px;
+    font-weight: 650;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+
+  .table-head button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: inherit;
+    text-transform: inherit;
+    letter-spacing: inherit;
+  }
+
+  .table-row {
+    height: 44px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .table-row:hover {
+    background: var(--surface-2);
+  }
+
+  .table-row.active {
+    background: var(--accent-soft);
+  }
+
+  .table-row .name-cell {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+  }
+
+  .table-row .name-cell span,
+  .table-row > span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .table-row .dim {
+    color: var(--text-3);
+  }
+
+  .issues-scroll {
+    flex: 1;
+    overflow: auto;
+    padding: 8px 16px 24px;
+  }
+
+  .issue-group {
+    margin-top: 14px;
+  }
+
+  .issue-group h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 6px;
+    font-size: 13px;
+    font-weight: 650;
+  }
+
+  .issue-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 13px;
+    color: var(--text-2);
+  }
+
+  .issue-item:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+
+  .issue-item.active {
+    background: var(--accent-soft);
+  }
+
+  .issues-empty {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    padding: 60px 20px;
+    color: var(--text-3);
+    text-align: center;
+  }
+}

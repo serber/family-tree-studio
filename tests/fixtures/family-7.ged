@@ -1,0 +1,47 @@
+0 HEAD
+1 SOUR RODNYE_TEST
+2 VERS 1.0
+1 GEDC
+2 VERS 7.0
+1 SCHMA
+2 TAG _CUSTOM https://example.invalid/gedcom/custom
+0 @I1@ INDI
+1 NAME Иван /Леснов/
+2 GIVN Иван
+2 SURN Леснов
+1 NAME Иоанн /Леснов/
+2 TYPE birth
+1 SEX M
+1 BIRT
+2 DATE ABT 1900
+2 PLAC Москва
+2 SOUR @S1@
+3 PAGE 17
+1 NOTE me@example.com
+2 CONT @@handle
+2 CONT
+2 CONT Последняя строка
+2 SOUR @S1@
+1 SNOTE @N1@
+1 FAMS @F1@
+1 _CUSTOM Keep exactly
+2 NOTE Metadata under an extension
+0 @I2@ INDI
+1 NAME Анна /Волкова/
+1 SEX F
+1 FAMS @F1@
+0 @I3@ INDI
+1 NAME Мария /Леснова/
+1 FAMC @F1@
+2 PEDI ADOPTED
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I2@
+1 CHIL @I3@
+1 MARR
+2 DATE 1920
+0 @S1@ SOUR
+1 TITL Метрическая книга
+0 @N1@ SNOTE Общая заметка
+1 CONT Не менять при правке личной заметки
+0 TRLR

@@ -1,0 +1,10 @@
+{
+  // The visualizer (and the shared code it uses) was written against stricter
+  // checks; keep them on top of the project-wide settings.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true
+  },
+  "include": ["src/viewer", "src/shared"]
+}
