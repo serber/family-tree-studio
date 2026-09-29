@@ -77,6 +77,13 @@ server {
         add_header Cache-Control "no-cache";
     }
 
+    # .webmanifest is not in the default mime.types; default_type applies to it alone.
+    # Don't use a types {} block here: it replaces the whole MIME map, and HTML
+    # would be served as application/octet-stream.
+    location = /site.webmanifest {
+        default_type application/manifest+json;
+    }
+
     # Hashed assets are immutable — cache aggressively
     location /assets/ {
         add_header Cache-Control "public, max-age=31536000, immutable";
