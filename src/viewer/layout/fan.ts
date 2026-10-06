@@ -110,6 +110,11 @@ const MAX_FONT_SCALE = 2.2;
 const ARC_TOLERANCE = 0.04;
 
 /** Years of life, locale-neutral: «1890–1960», «*1890», «†1960». */
+/** The name as drawn on the chart: with or without the surname. */
+export function shownName(person: PersonRef, settings: Pick<Settings, 'givenNamesOnly'>): string {
+  return settings.givenNamesOnly ? person.givenName : person.name;
+}
+
 export function yearsLabel(person: PersonRef): string | null {
   const { birthYear: b, deathYear: d } = person;
   if (b !== null && d !== null) return `${b}–${d}`;
@@ -174,7 +179,7 @@ function metricsFor(settings: Settings, measure: Measure): Metrics {
   const names = new Map<string, number>();
   const nameW = (p: PersonRef) => {
     let w = names.get(p.id);
-    if (w === undefined) names.set(p.id, (w = measure(p.name, font, bold)));
+    if (w === undefined) names.set(p.id, (w = measure(shownName(p, settings), font, bold)));
     return w;
   };
   const textW = (p: PersonRef) => {
@@ -379,7 +384,7 @@ export function computeLayout(tree: DescendantTree, settings: Settings, measure:
 
   const coreFont = m.font * 1.3;
   const coreRows = Math.max(tree.root.spouses.length, 1);
-  const widestRoot = Math.max(...tree.root.spouses.map((p) => measure(p.name, coreFont, true)), 0);
+  const widestRoot = Math.max(...tree.root.spouses.map((p) => measure(shownName(p, settings), coreFont, true)), 0);
   const baseCore = fullCircle
     ? Math.max(30, widestRoot / 2 + 14, (coreRows * coreFont * 1.3) / 1.6 + 8)
     : Math.max(36, widestRoot / 2 + 18, coreRows * coreFont * 1.4 + 12);

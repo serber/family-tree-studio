@@ -3,6 +3,8 @@ export type Sex = 'M' | 'F' | 'U';
 export interface Individual {
   id: string;
   name: string;
+  /** The name without the surname (the `/…/` part of `NAME`, else `GIVN`); the full name when that leaves nothing. */
+  givenName: string;
   sex: Sex;
   birthYear: number | null;
   deathYear: number | null;

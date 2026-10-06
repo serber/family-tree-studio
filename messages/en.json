@@ -537,6 +537,7 @@
       "ringGap": "Gap between rings",
       "fontSize": "Font size",
       "boldFont": "Bold font",
+      "givenNamesOnly": "Show given names only",
       "showYears": "Years of life",
       "showBothSpouses": "Show spouses",
       "spousesBeside": "Spouses side by side",

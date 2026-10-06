@@ -103,6 +103,7 @@ export const controlGroups: ControlGroup[] = [
     controls: [
       { kind: 'range', key: 'fontSize', labelKey: 'controls.fontSize', min: 6, max: 26 },
       { kind: 'toggle', key: 'boldFont', labelKey: 'controls.boldFont' },
+      { kind: 'toggle', key: 'givenNamesOnly', labelKey: 'controls.givenNamesOnly' },
       { kind: 'toggle', key: 'showYears', labelKey: 'controls.showYears' },
       { kind: 'toggle', key: 'showBothSpouses', labelKey: 'controls.showBothSpouses' },
       { kind: 'toggle', key: 'spousesBeside', labelKey: 'controls.spousesBeside' },

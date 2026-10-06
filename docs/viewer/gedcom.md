@@ -15,6 +15,7 @@ LEVEL [@XREF@] TAG [VALUE]
 | --- | --- |
 | `NAME` | Name; slashes around the surname are removed: `Иван /Иванов/` → `Иван Иванов`. Only the **first** `NAME` is used — it is the primary one; later records (married names, aliases, other spellings) never overwrite it |
 | `GIVN`, `SURN` | Fallback: when the first `NAME` has no value, the name is assembled from the `GIVN`/`SURN` under it |
+| (name without surname) | For «Показывать только имя»: the first `NAME` with its `/…/` part removed; when `NAME` marks no surname, its `GIVN`; when that is empty too, the full name |
 | `SEX` | `M` / `F`; anything else → `U` (unknown). Without a `SEX` tag the sex is taken from the family role: `HUSB` → `M`, `WIFE` → `F` (transcribed and hand-made files often omit it). An explicit tag, even `SEX U`, always wins |
 | `FAMS` | Families where the person is a spouse. Several are supported: the person keeps one card and their spouses fan out beside it, each union carrying its own children — see [architecture.md](architecture.md) |
 | `FAMC` → `PEDI` | Family where the person was born: the first `FAMC` whose `PEDI` is not `adopted`/`foster`/`sealing`, else the first `FAMC`. Only used to tell progenitors from subtree roots in the root family list |

@@ -48,6 +48,8 @@ export interface Settings {
   fontSize: number;
   /** Render names in bold. */
   boldFont: boolean;
+  /** Names without surnames: given names (and patronymics) only. */
+  givenNamesOnly: boolean;
   /** Years of life under the name, where there is room. */
   showYears: boolean;
   showBothSpouses: boolean;
@@ -90,6 +92,7 @@ export const defaultSettings: Settings = {
   cardThickness: 18,
   fontSize: 12,
   boldFont: false,
+  givenNamesOnly: false,
   showYears: true,
   showBothSpouses: true,
   spousesBeside: false,

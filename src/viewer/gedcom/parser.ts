@@ -36,6 +36,12 @@ function normalizeName(raw: string): string {
   return raw.replace(/\//g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+/** `Иван Петрович /Леснов/` → `Иван Петрович`; null when the value marks no surname. */
+function nameWithoutSurname(raw: string): string | null {
+  if (!raw.includes('/')) return null;
+  return raw.replace(/\/[^/]*(\/|$)/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 /**
  * The first 3–4 digit number: day numbers have at most two digits, so this is
  * the year — and for ranges (`BET 1850 AND 1860`, `FROM 1850 TO 1860`) the
@@ -61,7 +67,7 @@ function birthFamily(links: ChildLink[]): string | null {
 }
 
 function emptyIndividual(id: string): Individual {
-  return { id, name: '', sex: 'U', birthYear: null, deathYear: null, famsIds: [], famcId: null };
+  return { id, name: '', givenName: '', sex: 'U', birthYear: null, deathYear: null, famsIds: [], famcId: null };
 }
 
 function ensureIndividual(map: Map<string, Individual>, id: string): Individual {
@@ -94,6 +100,8 @@ export function parseGedcom(raw: string): GedcomData {
         person: Individual;
         given: string;
         surname: string;
+        /** The first `NAME` without its surname, when it marks one. */
+        nameGiven: string | null;
         event: 'BIRT' | 'DEAT' | null;
         /** `NAME` records seen so far; only the first (the primary name) is used. */
         names: number;
@@ -109,6 +117,7 @@ export function parseGedcom(raw: string): GedcomData {
     if (!c.person.name) {
       c.person.name = `${c.given} ${c.surname}`.trim() || c.person.id;
     }
+    c.person.givenName = c.nameGiven || c.given || c.person.name;
     c.person.famcId = birthFamily(c.childLinks);
   };
 
@@ -122,6 +131,7 @@ export function parseGedcom(raw: string): GedcomData {
           person: ensureIndividual(individuals, line.xref),
           given: '',
           surname: '',
+          nameGiven: null,
           event: null,
           names: 0,
           childLinks: []
@@ -145,7 +155,10 @@ export function parseGedcom(raw: string): GedcomData {
           // aliases or spellings and must not overwrite it.
           if (line.level !== 1) break;
           ctx.names += 1;
-          if (ctx.names === 1) person.name = normalizeName(line.value);
+          if (ctx.names === 1) {
+            person.name = normalizeName(line.value);
+            ctx.nameGiven = nameWithoutSurname(line.value);
+          }
           break;
         case 'GIVN':
           if (ctx.names <= 1) ctx.given = line.value.trim();
@@ -212,6 +225,7 @@ export function parseGedcom(raw: string): GedcomData {
 
   for (const person of individuals.values()) {
     if (!person.name) person.name = person.id;
+    if (!person.givenName) person.givenName = person.name;
   }
 
   // Transcribed and hand-made files often omit SEX; a family's HUSB and WIFE

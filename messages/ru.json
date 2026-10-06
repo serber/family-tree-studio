@@ -537,6 +537,7 @@
       "ringGap": "Зазор между кольцами",
       "fontSize": "Размер шрифта",
       "boldFont": "Жирный шрифт",
+      "givenNamesOnly": "Показывать только имя",
       "showYears": "Годы жизни",
       "showBothSpouses": "Показывать супругов",
       "spousesBeside": "Супруги рядом",

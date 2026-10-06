@@ -28,6 +28,7 @@ layout uses them is in [layout.md](layout.md).
 | --- | --- | --- | --- | --- |
 | Размер шрифта | `fontSize` | 6–26 | 12 | Base name size. Every text is measured (canvas `measureText`), and rings and cells are sized to fit; a cell written along the ring that came out roomy grows its name up to 2.2× |
 | Жирный шрифт | `boldFont` | on/off | off | Names at weight 700 |
+| Показывать только имя | `givenNamesOnly` | on/off | off | On: names without the surname — the part of `NAME` between slashes, else `GIVN` (`Иван Петрович /Леснов/` → «Иван Петрович»). Cells and rings are re-measured for the shorter names. Hover titles and search still use the full name |
 | Годы жизни | `showYears` | on/off | on | Years under the name («1890–1960», «*1890», «†1960») wherever there is room; arc rings get a second line for them |
 | Показывать супругов | `showBothSpouses` | on/off | on | Spouses as cells of their own in an outer band of the ring (split between unions for someone married several times). Off: descendants only |
 | Супруги рядом | `spousesBeside` | on/off | off | Spouses stand beside their partner on the same ring, shoulder to shoulder (the descendant first), instead of in an outer band. In the cards style this is the earlier look: a union's line leaves from the seam between the partners' cards. The ring is then one band, as thick as the longest name of either |
