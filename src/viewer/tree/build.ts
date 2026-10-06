@@ -4,6 +4,8 @@ import type { GedcomData, Individual, Sex } from '../gedcom/types.ts';
 export interface PersonRef {
   id: string;
   name: string;
+  /** The name without the surname (see `Individual.givenName`). */
+  givenName: string;
   sex: Sex;
   birthYear: number | null;
   deathYear: number | null;
@@ -56,8 +58,8 @@ export interface RootCandidate {
 }
 
 function toRef(person: Individual): PersonRef {
-  const { id, name, sex, birthYear, deathYear } = person;
-  return { id, name, sex, birthYear, deathYear };
+  const { id, name, givenName, sex, birthYear, deathYear } = person;
+  return { id, name, givenName, sex, birthYear, deathYear };
 }
 
 function personName(data: GedcomData, id: string | null): string | null {

@@ -1,6 +1,6 @@
 import { select, zoom, zoomIdentity } from 'd3';
 import type { Selection, ZoomBehavior } from 'd3';
-import { yearsLabel, type Cell, type Layout, type Link, type Measure } from '../layout/fan.ts';
+import { shownName, yearsLabel, type Cell, type Layout, type Link, type Measure } from '../layout/fan.ts';
 import { arcLinePath, bandPath, locate, pointAt, polylinePath, rowPoint, trackPath } from '../layout/track.ts';
 import type { PersonRef } from '../tree/build.ts';
 import type { Settings } from '../settings.ts';
@@ -282,7 +282,7 @@ export class TreeRenderer {
     const nameH = nameSize * 1.25;
     const yearsH = yearsSize * 1.2;
     const lines: TextLine[] = [];
-    const name = fitText(cell.person.name, cell.along, nameSize, bold);
+    const name = fitText(shownName(cell.person, settings), cell.along, nameSize, bold);
     const withYears = years !== null && cell.across >= nameH + yearsH * 0.9 && measureText(years, yearsSize, false) <= cell.along;
     const total = nameH + (withYears ? yearsH : 0);
 
@@ -528,7 +528,7 @@ export class TreeRenderer {
       const y = top + (i + 0.5) * bandHeight;
       const room = 2 * halfWidthAt(Math.abs(y) + bandHeight * 0.3) * 0.86;
       const base = Math.min(bandHeight * 0.42, settings.fontSize * 2.6);
-      const width = measureText(p.name, base, true);
+      const width = measureText(shownName(p, settings), base, true);
       return Math.max(Math.min(base, (base * room) / Math.max(width, 1)), 5);
     };
     const labels = rows.map((p, i) => ({ person: p, size: fontFor(p, i), y: top + (i + 0.5) * bandHeight }));
@@ -546,7 +546,7 @@ export class TreeRenderer {
       .attr('font-size', size.toFixed(2))
       .attr('font-weight', 600)
       .attr('fill', palette.text)
-      .text((d) => d.person.name);
+      .text((d) => shownName(d.person, settings));
     rootSel
       .select('g.labels')
       .selectAll<SVGTextElement, (typeof labels)[number]>('text.years')

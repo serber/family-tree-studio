@@ -113,3 +113,24 @@ test('editor works in English and keeps its state when the language changes', as
   await expect(page.getByRole('complementary', { name: 'Person card' }).locator('input[name="birthDate"]')).toHaveValue('')
   expect(errors).toEqual([])
 })
+
+test('visualizer shows given names only and hides years of life', async ({ page }) => {
+  const errors = watchErrors(page)
+  await page.goto('/ru/viewer/')
+  await expect(page.locator('.viewer-status')).toContainText('Показано: 300 человек')
+  // Only drawn text counts: hover titles keep the full name and years on purpose.
+  const chartText = () => page.locator('.viewer-chart svg').evaluate((svg) => [...svg.querySelectorAll('text, textPath')].map((node) => node.textContent ?? '').join('\n'))
+  const toggle = (label: string) => page.locator('label.control-toggle', { hasText: label })
+
+  expect(await chartText()).toContain('Леснов')
+  expect(await chartText()).toMatch(/\d{4}/)
+  await toggle('Показывать только имя').click()
+  await expect.poll(chartText).not.toContain('Леснов')
+  expect(await chartText()).toContain('Михаил Александрович')
+  await toggle('Годы жизни').click()
+  await expect.poll(chartText).not.toMatch(/\d{4}/)
+  await toggle('Показывать только имя').click()
+  await expect.poll(chartText).toContain('Леснов')
+  expect(await chartText()).not.toMatch(/\d{4}/)
+  expect(errors).toEqual([])
+})
