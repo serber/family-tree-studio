@@ -173,7 +173,8 @@
     margin-top: 12px;
   }
 
-  .choice-list button {
+  .choice-list > button,
+  .snapshot-row > button:first-child {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -184,8 +185,10 @@
     font-size: 13.5px;
   }
 
-  .choice-list button:hover,
-  .choice-list button:focus-visible {
+  .choice-list > button:hover,
+  .choice-list > button:focus-visible,
+  .snapshot-row > button:first-child:hover,
+  .snapshot-row > button:first-child:focus-visible {
     border-color: var(--accent);
     background: var(--accent-soft);
   }
@@ -195,6 +198,38 @@
     color: var(--text-3);
     font-size: 12px;
     margin-top: 2px;
+  }
+
+  .snapshot-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .snapshot-row.confirming {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    padding: 8px 8px 8px 12px;
+    border: 1px solid var(--danger);
+    border-radius: var(--radius);
+    background: var(--danger-soft);
+    font-size: 13px;
+  }
+
+  .snapshot-error {
+    margin-top: 10px;
+    color: var(--danger);
+    font-size: 13px;
+  }
+
+  .snapshot-delete-all {
+    margin-right: auto;
+  }
+
+  .snapshot-confirm-all {
+    margin-right: auto;
+    align-self: center;
+    font-size: 13px;
   }
 
   .shortcuts {

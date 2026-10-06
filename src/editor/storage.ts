@@ -62,11 +62,21 @@ export async function listSnapshots(): Promise<Snapshot[]> {
   })
 }
 
-/** Takes a snapshot immediately, e.g. before replacing the document. */
+/** Takes a snapshot immediately, e.g. before replacing or closing the document, unless the newest one is identical. */
 export async function snapshotNow(tree: TreeDocument): Promise<void> {
   const snapshots = await listSnapshots()
+  const latest = snapshots[0]
+  if (latest && latest.tree.id === tree.id && latest.title === tree.title && JSON.stringify(latest.tree) === JSON.stringify(tree)) return
   const limit = tree.gedcom.text.length > LARGE_SOURCE ? 3 : SNAPSHOT_LIMIT
   await set(SNAPSHOTS_KEY, [{ savedAt: new Date().toISOString(), title: tree.title, people: Object.keys(tree.people).length, tree }, ...snapshots].slice(0, limit))
+}
+
+/** Deletes the snapshot saved at `savedAt`, or all snapshots when it is omitted. */
+export async function deleteSnapshots(savedAt?: string): Promise<void> {
+  if (savedAt === undefined) return del(SNAPSHOTS_KEY)
+  const value: unknown = await get(SNAPSHOTS_KEY)
+  if (!Array.isArray(value)) return
+  await set(SNAPSHOTS_KEY, value.filter((entry: Partial<Snapshot> | undefined) => entry?.savedAt !== savedAt))
 }
 
 export async function clearDraft(): Promise<void> {

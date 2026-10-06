@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { AlertTriangle, Check, CheckCheck, ChevronDown, CircleHelp, Download, FilePlus2, FileUp, History, ListTree, LoaderCircle, Network, Redo2, Save, Search, Sparkles, Table2, Undo2, Upload } from 'lucide-react'
+import { AlertTriangle, Check, CheckCheck, ChevronDown, CircleHelp, Download, FilePlus2, FileUp, FileX2, History, ListTree, LoaderCircle, Network, Redo2, Save, Search, Sparkles, Table2, Undo2, Upload } from 'lucide-react'
 import type { DraftMeta } from '../storage'
 import { BrandMark } from '../../shared/components/BrandMark'
 import { LangSwitch } from '../../shared/components/LangSwitch'
@@ -38,6 +38,7 @@ interface Props {
     onOpenBackup: () => void
     onSnapshots: () => void
     onDemo: () => void
+    onClose: () => void
   }
 }
 
@@ -91,6 +92,7 @@ export function TopBar(props: Props) {
         {item(t('file.saveGedcom'), <Save size={16} />, props.file.onSaveGedcom, 'Ctrl S')}
         {item(t('file.openGedcom'), <FileUp size={16} />, props.file.onOpenGedcom)}
         {item(t('file.newTree'), <FilePlus2 size={16} />, props.file.onNew)}
+        {item(t('file.closeTree'), <FileX2 size={16} />, props.file.onClose)}
         <hr />
         {item(t('file.downloadBackup'), <Download size={16} />, props.file.onDownloadBackup)}
         {item(t('file.openBackup'), <Upload size={16} />, props.file.onOpenBackup)}

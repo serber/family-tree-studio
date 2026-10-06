@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { ArrowLeft, FileUp, History, LoaderCircle, ShieldCheck, Sparkles, UserPlus } from 'lucide-react'
-import { listSnapshots, type Snapshot } from '../storage'
+import { ArrowLeft, FileUp, History, LoaderCircle, ShieldCheck, Sparkles, Trash2, UserPlus } from 'lucide-react'
+import { deleteSnapshots, listSnapshots, type Snapshot } from '../storage'
 import { BrandMark } from '../../shared/components/BrandMark'
 import { LangSwitch } from '../../shared/components/LangSwitch'
 import { formatDateTime, getLocale, t as tr } from '../../shared/i18n'
@@ -85,26 +85,54 @@ export function ShortcutsDialog({ onClose }: { onClose: () => void }) {
   </div>
 }
 
-export function SnapshotsDialog({ onRestore, onClose }: { onRestore: (snapshot: Snapshot) => void; onClose: () => void }) {
+/** Lists snapshots to restore; deleting one (or all) is irreversible, so it asks inline first. */
+export function SnapshotsDialog({ intro, onRestore, onClose }: { intro?: string; onRestore: (snapshot: Snapshot) => void; onClose: () => void }) {
   const [snapshots, setSnapshots] = useState<Snapshot[] | null>(null)
-  useEffect(() => { listSnapshots().then(setSnapshots).catch(() => setSnapshots([])) }, [])
-  return <div className="overlay" onMouseDown={onClose} onKeyDown={(event) => { if (event.key === 'Escape') { event.stopPropagation(); onClose() } }}>
+  const [confirming, setConfirming] = useState<string | null>(null) // a snapshot's savedAt, or 'all'
+  const [failed, setFailed] = useState(false)
+  const reload = () => listSnapshots().then(setSnapshots).catch(() => setSnapshots([]))
+  useEffect(() => { void reload() }, [])
+  const remove = async (savedAt?: string) => {
+    setConfirming(null)
+    try { await deleteSnapshots(savedAt); setFailed(false) } catch { setFailed(true) }
+    await reload()
+  }
+  return <div className="overlay" onMouseDown={onClose} onKeyDown={(event) => { if (event.key === 'Escape') { event.stopPropagation(); if (confirming) setConfirming(null); else onClose() } }}>
     <div className="dialog" role="dialog" aria-label={t('snapshots.title')} onMouseDown={(event) => event.stopPropagation()}>
       <h2>{t('snapshots.title')}</h2>
-      <p>{t('snapshots.intro')}</p>
+      <p>{intro ?? t('snapshots.intro')}</p>
       {!snapshots ? <LoaderCircle className="spin" /> : !snapshots.length ? <p className="muted">{t('snapshots.empty')}</p> :
         <div className="choice-list" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-          {snapshots.map((snapshot) => <button key={snapshot.savedAt} onClick={() => onRestore(snapshot)}>
-            <History size={16} />
-            <span><strong>{snapshot.title}</strong><small>{formatDateTime(snapshot.savedAt)} · {t('snapshots.people', { count: snapshot.people })}</small></span>
-          </button>)}
+          {snapshots.map((snapshot) => confirming === snapshot.savedAt
+            ? <div key={snapshot.savedAt} className="snapshot-row confirming" role="group" aria-label={t('snapshots.deleteOne')}>
+              <span>{t('snapshots.deleteOne')}</span>
+              <button className="btn btn-sm btn-secondary btn-danger" autoFocus onClick={() => void remove(snapshot.savedAt)}>{t('snapshots.delete')}</button>
+              <button className="btn btn-sm btn-secondary" onClick={() => setConfirming(null)}>{t('dialog.cancel')}</button>
+            </div>
+            : <div key={snapshot.savedAt} className="snapshot-row">
+              <button onClick={() => onRestore(snapshot)}>
+                <History size={16} />
+                <span><strong>{snapshot.title}</strong><small>{formatDateTime(snapshot.savedAt)} · {t('snapshots.people', { count: snapshot.people })}</small></span>
+              </button>
+              <button className="icon-btn" onClick={() => setConfirming(snapshot.savedAt)} aria-label={t('snapshots.deleteTitle')} title={t('snapshots.deleteTitle')}><Trash2 size={16} /></button>
+            </div>)}
         </div>}
-      <div className="dialog-actions"><button className="btn btn-secondary" onClick={onClose}>{t('dialog.close')}</button></div>
+      {failed && <p className="snapshot-error" role="alert">{t('snapshots.deleteFailed')}</p>}
+      <div className="dialog-actions">
+        {confirming === 'all' ? <>
+          <span className="snapshot-confirm-all">{t('snapshots.deleteAllConfirm', { count: snapshots?.length ?? 0 })}</span>
+          <button className="btn btn-secondary btn-danger" autoFocus onClick={() => void remove()}>{t('snapshots.deleteAll')}</button>
+          <button className="btn btn-secondary" onClick={() => setConfirming(null)}>{t('dialog.cancel')}</button>
+        </> : <>
+          {!!snapshots?.length && <button className="btn btn-secondary btn-danger snapshot-delete-all" onClick={() => setConfirming('all')}><Trash2 size={15} />{t('snapshots.deleteAll')}</button>}
+          <button className="btn btn-secondary" onClick={onClose}>{t('dialog.close')}</button>
+        </>}
+      </div>
     </div>
   </div>
 }
 
-export function Welcome({ onNew, onOpen, onDemo }: { onNew: () => void; onOpen: () => void; onDemo: () => void }) {
+export function Welcome({ onNew, onOpen, onDemo, snapshots, onSnapshots }: { onNew: () => void; onOpen: () => void; onDemo: () => void; snapshots: number; onSnapshots: () => void }) {
   useLocale()
   return <div className="welcome">
     <div className="welcome-card">
@@ -121,6 +149,7 @@ export function Welcome({ onNew, onOpen, onDemo }: { onNew: () => void; onOpen: 
       </div>
       <div className="welcome-foot">
         <span><ShieldCheck size={15} />{t('welcome.privacy')}</span>
+        {snapshots > 0 && <button className="link-btn" onClick={onSnapshots}><History size={13} />{t('welcome.snapshots', { count: snapshots })}</button>}
         <a className="link-btn" href={pageUrl('home', getLocale())}><ArrowLeft size={13} />{tr('common.backHome')}</a>
       </div>
     </div>
