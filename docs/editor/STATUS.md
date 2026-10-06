@@ -8,7 +8,8 @@ Updated: 2026-10-06.
 - The welcome screen shows «Автосохранённые версии (N)» when versions exist; picking one opens it as the working tree (marked as not downloaded).
 - The autosaved versions dialog can delete a single version (trash button, inline confirmation in the row) or all versions («Удалить все», inline confirmation with the count). Deletion is irreversible, so it confirms instead of using an undo toast. `deleteSnapshots(savedAt?)` in `storage.ts`.
 - `snapshotNow` no longer adds a copy identical to the newest snapshot (closing or replacing a tree right after it was opened used to leave two equal versions).
-- Checks: `npm run build` passed; `npm test` 118 passed; e2e 16 passed (new: "closes the tree to the welcome screen, reopens it from an autosaved version, and deletes versions"). Screenshots of the File menu, welcome screen and both confirmation states checked in Russian/light and English/dark.
+- Fixed: the tree showed through the table and issues views (and its cards caught clicks there). The hidden canvas used `visibility: hidden`, but React Flow sets inline `visibility: visible` and `pointer-events: all` on every measured card. It is now hidden with `clip-path` (no painting, no hit testing, layout kept for measuring) and `inert`. Regression e2e test: no point of the main area hits the canvas while the table or issues view is open (53 hits before the fix).
+- Checks: `npm run build` passed; `npm test` 118 passed; e2e 17 passed (new: "closes the tree to the welcome screen, reopens it from an autosaved version, and deletes versions", "the table and issues views are not covered by the hidden tree canvas"). Screenshots of the File menu, welcome screen and both confirmation states checked in Russian/light and English/dark.
 
 ## 2026-09-29: merged into Family Tree Studio
 

@@ -363,3 +363,26 @@ test('closes the tree to the welcome screen, reopens it from an autosaved versio
   await expect(page.getByRole('button', { name: /Автосохранённые версии/ })).toHaveCount(0)
   expect(errors).toEqual([])
 })
+
+test('the table and issues views are not covered by the hidden tree canvas', async ({ page }) => {
+  await page.goto('/ru/editor/')
+  await page.getByRole('button', { name: /Посмотреть на примере/ }).click()
+  await expect(page.locator('.canvas-stats')).toContainText('300 чел.')
+  await expect(page.locator('.react-flow__node-person').first()).toBeVisible()
+  // React Flow sets inline visibility: visible and pointer-events: all on cards, so hit testing is the real check.
+  const canvasHits = () => page.evaluate(() => {
+    const main = document.querySelector('.main-view')!.getBoundingClientRect()
+    let hits = 0
+    for (let x = main.left + 10; x < main.right; x += 40) for (let y = main.top + 10; y < main.bottom; y += 40) {
+      if (document.elementFromPoint(x, y)?.closest('.canvas')) hits++
+    }
+    return hits
+  })
+  for (const view of ['Таблица', 'Замечания']) {
+    await page.getByRole('button', { name: view, exact: true }).click()
+    await expect.poll(canvasHits).toBe(0)
+  }
+  await page.getByRole('button', { name: 'Дерево', exact: true }).click()
+  await expect.poll(canvasHits).toBeGreaterThan(0)
+  await expect(page.locator('.react-flow__node-person').first()).toBeVisible()
+})

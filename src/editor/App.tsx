@@ -572,7 +572,7 @@ function Editor({ start, onClose }: { start: Start; onClose: () => void }) {
       review={{ on: reviewMode, verified: verifiedCount, total: Object.keys(tree.people).length }} onToggleReview={() => setReviewMode((value) => !value)} />
     <div className="workspace">
       <main className="main-view">
-        <div className={`canvas ${view === 'tree' ? '' : 'is-hidden'}`} aria-hidden={view !== 'tree'} aria-label={t('canvas.label')}>
+        <div className={`canvas ${view === 'tree' ? '' : 'is-hidden'}`} aria-hidden={view !== 'tree'} inert={view !== 'tree'} aria-label={t('canvas.label')}>
           {layout.busy && layoutValid && <div className="layout-busy"><LoaderCircle className="spin" size={14} />{t('canvas.relayout')}</div>}
           {!layoutValid && Object.keys(tree.people).length > 0 && <div className="canvas-loading"><div>{layout.error ? <><strong>{t('canvas.layoutFailed')}</strong><span>{errorMessage(layout.error)}</span><button className="btn btn-primary" onClick={() => setLayoutAttempt((value) => value + 1)}>{t('canvas.retry')}</button></> : <><LoaderCircle className="spin" size={26} /><strong>{t('canvas.placing', { count: Object.keys(tree.people).length })}</strong></>}</div></div>}
           <TreeCanvas tree={tree} positions={layoutValid ? layout.positions : {}} selectedId={selectedId} lineage={lineage} newIds={newIds} command={command}
