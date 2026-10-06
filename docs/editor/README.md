@@ -23,7 +23,9 @@ The editor lives at `/editor/` (English) and `/ru/editor/` (Russian). The interf
 
 **Keyboard** (press `?` for the full list; letters are physical keys and work in any layout): О/J father, М/V mother, П/G spouse, С/C son, Д/L daughter, Б/`,` brother, Shift+Б sister, Enter edit, Delete remove, Esc deselect, 0 whole tree, 1 center selected, Ctrl+Z / Ctrl+Shift+Z undo/redo, Ctrl+S save GEDCOM.
 
-**Saving.** Every change is saved automatically in the browser (IndexedDB). The browser is asked to keep this storage persistent, and a snapshot is taken every 10 minutes of work and before a tree is replaced («Файл → Автосохранённые версии»). This is not a backup outside the browser: use **Ctrl+S** (GEDCOM) or «Скачать резервную копию» (JSON) regularly. The status in the top bar shows when there are changes that have not been downloaded.
+**Saving.** Every change is saved automatically in the browser (IndexedDB). The browser is asked to keep this storage persistent, and a snapshot is taken every 10 minutes of work and before a tree is replaced or closed («Файл → Автосохранённые версии»; versions can be deleted one by one or all at once). This is not a backup outside the browser: use **Ctrl+S** (GEDCOM) or «Скачать резервную копию» (JSON) regularly. The status in the top bar shows when there are changes that have not been downloaded.
+
+**Closing a tree.** «Файл → Закрыть дерево» returns to the welcome screen and removes the working draft, so a reload no longer opens it. It asks only when there are undownloaded changes; the closed tree stays in the autosaved versions, which the welcome screen also offers («Автосохранённые версии (N)»).
 
 **GEDCOM.** New trees are saved as GEDCOM 5.5.1 UTF-8. For imported files, only what you changed is rewritten; unknown tags, sources, and other records are kept. See [GEDCOM support](GEDCOM_SUPPORT.md) for exact guarantees and limits.
 

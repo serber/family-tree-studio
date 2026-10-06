@@ -72,7 +72,8 @@
       "openHint": ".ged from MyHeritage, Gramps, Ancestry and others",
       "demo": "Try an example",
       "demoHint": "A fictional family of 300 people",
-      "privacy": "Everything is stored only in this browser. Nothing is sent over the internet."
+      "privacy": "Everything is stored only in this browser. Nothing is sent over the internet.",
+      "snapshots": "Autosaved versions ({count, number})"
     },
     "busy": {
       "reading": "Reading the file…",
@@ -118,7 +119,8 @@
       "snapshots": "Autosaved versions…",
       "examples": "Example",
       "demo": "Demo: {count, number} people",
-      "note": "The tree is saved automatically in this browser. Save GEDCOM or a backup regularly — that is your copy outside the browser."
+      "note": "The tree is saved automatically in this browser. Save GEDCOM or a backup regularly — that is your copy outside the browser.",
+      "closeTree": "Close tree"
     },
     "review": {
       "toggle": "Review mode",
@@ -272,6 +274,11 @@
       "openBackup": "Open the backup “{name}” ({count, plural, one {# person} other {# people}})?",
       "restore": "Restore the version from {date}?"
     },
+    "close": {
+      "title": "Close the tree?",
+      "warning": "Changes since the last download are not in a GEDCOM file or a backup. A copy of the tree stays in “Autosaved versions” in this browser.",
+      "confirm": "Close"
+    },
     "history": {
       "add": "{relation, select, father {Father} mother {Mother} partner {Spouse} brother {Brother} sister {Sister} son {Son} daughter {Daughter} other {Relative}} for {name}",
       "link": "Link: {kind, select, parent {parent {name}} partner {marriage to {name}} sibling {sibling {name}} other {child {name}}}",
@@ -308,7 +315,9 @@
       "nextUnverified": "Go to the next unchecked person",
       "nextUnverifiedKeywords": "review verify",
       "issues": "Data issues ({count, number})",
-      "issuesKeywords": "errors duplicates"
+      "issuesKeywords": "errors duplicates",
+      "close": "Close the tree",
+      "closeKeywords": "close exit welcome start"
     },
     "palette": {
       "label": "Search",
@@ -355,7 +364,14 @@
       "title": "Autosaved versions",
       "intro": "Every 10 minutes of work and before a tree is replaced, a copy is saved in this browser. Restoring replaces the current tree (a copy of it is saved too).",
       "empty": "No versions yet.",
-      "people": "{count, plural, one {# person} other {# people}}"
+      "people": "{count, plural, one {# person} other {# people}}",
+      "introWelcome": "Copies of trees saved in this browser: every 10 minutes of work, before a tree is replaced and when it is closed. Pick one to open it.",
+      "delete": "Delete",
+      "deleteTitle": "Delete this version",
+      "deleteOne": "Delete this version? This cannot be undone.",
+      "deleteAll": "Delete all",
+      "deleteAllConfirm": "{count, plural, =1 {Delete the only version?} other {Delete all # versions?}} This cannot be undone.",
+      "deleteFailed": "Could not delete: the browser storage is not available."
     },
     "table": {
       "label": "Everyone",

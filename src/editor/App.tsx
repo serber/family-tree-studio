@@ -1,6 +1,6 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { ReactFlowProvider } from '@xyflow/react'
-import { FileSearch, FileUp, LoaderCircle, Maximize, Save, ShieldCheck, UserPlus } from 'lucide-react'
+import { FileSearch, FileUp, FileX2, LoaderCircle, Maximize, Save, ShieldCheck, UserPlus } from 'lucide-react'
 import { TreeCanvas, type AddAction, type CanvasCommand } from './components/TreeCanvas'
 import { Inspector, type LinkKind } from './components/Inspector'
 import { CommandPalette, type PaletteCommand } from './components/CommandPalette'
@@ -17,7 +17,7 @@ import { buildIndex, fullName, lifespan, lineageOf, marriageOrders, relativesOf,
 import { layoutInput } from './layout/layout'
 import { createSkeleton } from './gedcom/skeleton'
 import { readDemo, readGedcom, writeGedcom } from './gedcom/client'
-import { downloadBackup, loadDraft, parseDraft, requestPersistentStorage, saveDraft, snapshotNow, type Draft, type DraftMeta, type Snapshot } from './storage'
+import { clearDraft, downloadBackup, listSnapshots, loadDraft, parseDraft, requestPersistentStorage, saveDraft, snapshotNow, type Draft, type DraftMeta, type Snapshot } from './storage'
 import { isTyping, useLayout } from './hooks'
 import { AppError } from '../shared/errors'
 import { formatDateTime } from '../shared/i18n'
@@ -51,6 +51,8 @@ export default function App() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [retry, setRetry] = useState(0)
+  const [snapshotCount, setSnapshotCount] = useState(0)
+  const [showSnapshots, setShowSnapshots] = useState(false)
   const gedcomInput = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -62,10 +64,17 @@ export default function App() {
     }).catch((reason: unknown) => { if (active) setBoot({ ready: false, error: reason instanceof Error ? reason.message : t('errors.storageRead') }) })
     return () => { active = false }
   }, [retry])
+  // The welcome screen offers autosaved versions, e.g. to reopen a tree that was closed.
+  useEffect(() => {
+    if (start || showSnapshots) return
+    let active = true
+    listSnapshots().then((snapshots) => { if (active) setSnapshotCount(snapshots.length) }).catch(() => {})
+    return () => { active = false }
+  }, [start, showSnapshots])
 
   if (boot.error) return <div className="startup"><div><ShieldCheck size={32} /><h1>{t('startup.failedTitle')}</h1><p>{boot.error}</p><p>{t('startup.failedHint')}</p><button className="btn btn-primary" onClick={() => { setBoot({ ready: false }); setRetry((value) => value + 1) }}>{t('startup.retry')}</button></div></div>
   if (!boot.ready) return <div className="startup"><div><LoaderCircle className="spin" /><p>{t('startup.loading')}</p></div></div>
-  if (start) return <ReactFlowProvider><Editor start={start} /></ReactFlowProvider>
+  if (start) return <ReactFlowProvider><Editor start={start} onClose={() => setStart(null)} /></ReactFlowProvider>
 
   const open = async (read: () => Promise<TreeDocument>) => {
     setBusy(true)
@@ -81,7 +90,10 @@ export default function App() {
     <Welcome
       onNew={() => { const { tree, personId } = createNewTree(); setStart({ tree, meta: { changedSinceExport: true }, select: personId, focus: true }) }}
       onOpen={() => gedcomInput.current?.click()}
-      onDemo={() => void open(() => readDemo(t('defaults.demoTitle')))} />
+      onDemo={() => void open(() => readDemo(t('defaults.demoTitle')))}
+      snapshots={snapshotCount} onSnapshots={() => setShowSnapshots(true)} />
+    {showSnapshots && <SnapshotsDialog intro={t('snapshots.introWelcome')} onClose={() => setShowSnapshots(false)}
+      onRestore={(snapshot) => { setShowSnapshots(false); setStart({ tree: snapshot.tree, meta: { changedSinceExport: true }, select: Object.keys(snapshot.tree.people)[0] }) }} />}
     <input ref={gedcomInput} type="file" accept=".ged,.GED" hidden data-testid="gedcom-input" onChange={(event) => { const file = event.target.files?.[0]; if (file) void openFile(file); event.target.value = '' }} />
     {busy && <div className="file-busy"><div><LoaderCircle className="spin" size={26} />{t('busy.reading')}</div></div>}
     {error && <div className="toast error" role="alert"><span>{error}</span><button onClick={() => setError('')}>✕</button></div>}
@@ -90,7 +102,7 @@ export default function App() {
 
 type Palette = { mode: 'search' } | { mode: 'pick'; title: string; filter: (person: Person) => boolean; onPick: (id: string) => void }
 
-function Editor({ start }: { start: Start }) {
+function Editor({ start, onClose }: { start: Start; onClose: () => void }) {
   const locale = useLocale()
   const [state, dispatch] = useReducer(editorReducer, start.tree, initialEditorState)
   const tree = state.tree
@@ -162,6 +174,7 @@ function Editor({ start }: { start: Start }) {
   const saveQueue = useRef(Promise.resolve())
   const firstTree = useRef(tree)
   const persisted = useRef(false)
+  const closing = useRef(false)
   useEffect(() => {
     if (tree !== firstTree.current) setMeta((current) => current.changedSinceExport ? current : { ...current, changedSinceExport: true })
   }, [tree])
@@ -169,6 +182,7 @@ function Editor({ start }: { start: Start }) {
     let active = true
     setSaveState('pending')
     const timer = setTimeout(() => {
+      if (closing.current) return
       saveQueue.current = saveQueue.current.catch(() => {}).then(() => saveDraft(tree, meta))
       saveQueue.current.then(() => {
         if (active) setSaveState('saved')
@@ -432,6 +446,20 @@ function Editor({ start }: { start: Start }) {
     } catch (error) { showError(error) } finally { setBusy(null) }
   }, [tree, showError])
 
+  /** Back to the welcome screen. Like a replacement: asks only about undownloaded work, and keeps a snapshot. */
+  const closeTree = useCallback(async () => {
+    const hasWork = Object.keys(tree.people).length > 0 && meta.changedSinceExport
+    if (hasWork && !await ask({ title: t('close.title'), message: t('close.warning'), confirmLabel: t('close.confirm'), danger: true })) return
+    closing.current = true
+    await saveQueue.current.catch(() => {})
+    // A brand-new tree nobody has typed into is not worth a snapshot.
+    const blank = Object.values(tree.people).every((person) => !person.givenName.trim() && !person.surname.trim())
+    if (!blank) { try { await snapshotNow(tree) } catch { /* the snapshot is a convenience; closing proceeds */ } }
+    try { await clearDraft() } catch (error) { closing.current = false; showError(error); return }
+    writeStorage(SELECTED_KEY, null)
+    onClose()
+  }, [tree, meta.changedSinceExport, ask, showError, onClose])
+
   const fileActions = useMemo(() => ({
     onNew: () => { const created = createNewTree(); void replaceDocument(created.tree, { confirm: replaceWarning, select: created.personId, focus: true }) },
     onOpenGedcom: () => gedcomInput.current?.click(),
@@ -440,7 +468,8 @@ function Editor({ start }: { start: Start }) {
     onOpenBackup: () => backupInput.current?.click(),
     onSnapshots: () => setShowSnapshots(true),
     onDemo: () => void openDemo(),
-  }), [replaceDocument, saveGedcom, openDemo, tree, replaceWarning])
+    onClose: () => void closeTree(),
+  }), [replaceDocument, saveGedcom, openDemo, closeTree, tree, replaceWarning])
 
   const restoreSnapshot = useCallback((snapshot: Snapshot) => {
     setShowSnapshots(false)
@@ -523,7 +552,8 @@ function Editor({ start }: { start: Start }) {
     { id: 'review', label: t(reviewMode ? 'commands.reviewOff' : 'commands.reviewOn'), icon: <FileSearch size={17} />, run: () => setReviewMode((value) => !value), keywords: t('commands.reviewKeywords') },
     { id: 'next-unverified', label: t('commands.nextUnverified'), icon: <FileSearch size={17} />, run: () => { setReviewMode(true); goToNextUnverified(selectedId) }, keywords: t('commands.nextUnverifiedKeywords') },
     { id: 'issues', label: t('commands.issues', { count: issues.length }), icon: <FileSearch size={17} />, run: () => setView('issues'), keywords: t('commands.issuesKeywords') },
-  ], [addFirst, saveGedcom, issues.length, reviewMode, goToNextUnverified, selectedId, locale])
+    { id: 'close', label: t('commands.close'), icon: <FileX2 size={17} />, run: () => void closeTree(), keywords: t('commands.closeKeywords') },
+  ], [addFirst, saveGedcom, issues.length, reviewMode, goToNextUnverified, selectedId, closeTree, locale])
 
   const [recent, setRecent] = useState<string[]>([])
   useEffect(() => { if (selectedId) setRecent((current) => [selectedId, ...current.filter((id) => id !== selectedId)].slice(0, 12)) }, [selectedId])
@@ -542,7 +572,7 @@ function Editor({ start }: { start: Start }) {
       review={{ on: reviewMode, verified: verifiedCount, total: Object.keys(tree.people).length }} onToggleReview={() => setReviewMode((value) => !value)} />
     <div className="workspace">
       <main className="main-view">
-        <div className={`canvas ${view === 'tree' ? '' : 'is-hidden'}`} aria-hidden={view !== 'tree'} aria-label={t('canvas.label')}>
+        <div className={`canvas ${view === 'tree' ? '' : 'is-hidden'}`} aria-hidden={view !== 'tree'} inert={view !== 'tree'} aria-label={t('canvas.label')}>
           {layout.busy && layoutValid && <div className="layout-busy"><LoaderCircle className="spin" size={14} />{t('canvas.relayout')}</div>}
           {!layoutValid && Object.keys(tree.people).length > 0 && <div className="canvas-loading"><div>{layout.error ? <><strong>{t('canvas.layoutFailed')}</strong><span>{errorMessage(layout.error)}</span><button className="btn btn-primary" onClick={() => setLayoutAttempt((value) => value + 1)}>{t('canvas.retry')}</button></> : <><LoaderCircle className="spin" size={26} /><strong>{t('canvas.placing', { count: Object.keys(tree.people).length })}</strong></>}</div></div>}
           <TreeCanvas tree={tree} positions={layoutValid ? layout.positions : {}} selectedId={selectedId} lineage={lineage} newIds={newIds} command={command}

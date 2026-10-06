@@ -298,3 +298,91 @@ test('review mode marks people without moving the selection, persists, and never
   expect(await exportText()).toBe(before)
   expect(errors).toEqual([])
 })
+
+/** The number of autosaved versions offered on the welcome screen. */
+async function versionCount(page: Page) {
+  const text = await page.getByRole('button', { name: /Автосохранённые версии \(\d+\)/ }).textContent()
+  return Number(text!.match(/\((\d+)\)/)![1])
+}
+
+test('closes the tree to the welcome screen, reopens it from an autosaved version, and deletes versions', async ({ page }) => {
+  const errors = trackErrors(page)
+  await startNewTree(page)
+  await page.keyboard.type('Закрытый')
+  await page.keyboard.press('Escape')
+  await expect(page.getByTestId('save-status')).toContainText('Сохранено в браузере')
+
+  // Undownloaded work: closing asks first, and cancelling keeps the tree open.
+  await page.getByRole('button', { name: 'Файл' }).click()
+  await page.getByRole('menuitem', { name: 'Закрыть дерево' }).click()
+  await expect(page.getByRole('alertdialog', { name: 'Закрыть дерево?' })).toBeVisible()
+  await page.getByRole('button', { name: 'Отмена' }).click()
+  await expect(page.locator('.react-flow__node-person')).toContainText('Закрытый')
+
+  await page.getByRole('button', { name: 'Файл' }).click()
+  await page.getByRole('menuitem', { name: 'Закрыть дерево' }).click()
+  await page.getByRole('alertdialog').getByRole('button', { name: 'Закрыть' }).click()
+  await expect(page.getByRole('button', { name: /Начать новое дерево/ })).toBeVisible()
+
+  // The draft is gone: a reload stays on the welcome screen.
+  await page.reload()
+  await expect(page.getByRole('button', { name: /Начать новое дерево/ })).toBeVisible()
+
+  // The closed tree is the newest autosaved version and opens from the welcome screen.
+  await page.getByRole('button', { name: /Автосохранённые версии \(\d+\)/ }).click()
+  await page.getByRole('dialog', { name: 'Автосохранённые версии' }).getByRole('button', { name: /1 чел\./ }).first().click()
+  await expect(page.locator('.react-flow__node-person')).toContainText('Закрытый')
+
+  // A downloaded tree closes without a question, and its copy is added to the versions.
+  await page.getByRole('button', { name: 'Файл' }).click()
+  await page.getByRole('menuitem', { name: 'Демо: 300 человек' }).click()
+  await page.getByRole('button', { name: 'Заменить' }).click()
+  await expect(page.locator('.canvas-stats')).toContainText('300 чел.')
+  await expect(page.getByTestId('save-status')).toContainText('выгружено')
+  await page.getByRole('button', { name: 'Файл' }).click()
+  await page.getByRole('menuitem', { name: 'Закрыть дерево' }).click()
+  await expect(page.getByRole('button', { name: /Начать новое дерево/ })).toBeVisible()
+  const versions = await versionCount(page)
+
+  // Delete one version (with an inline confirmation), then all of them.
+  await page.getByRole('button', { name: /Автосохранённые версии \(\d+\)/ }).click()
+  const dialog = page.getByRole('dialog', { name: 'Автосохранённые версии' })
+  await expect(dialog.getByRole('button', { name: /300 чел\./ }).first()).toBeVisible()
+  await expect(dialog.getByRole('button', { name: 'Удалить эту версию' })).toHaveCount(versions)
+  await dialog.getByRole('button', { name: 'Удалить эту версию' }).first().click()
+  await dialog.getByRole('button', { name: 'Отмена' }).click()
+  await expect(dialog.getByRole('button', { name: 'Удалить эту версию' })).toHaveCount(versions)
+  await dialog.getByRole('button', { name: 'Удалить эту версию' }).first().click()
+  await dialog.getByRole('button', { name: 'Удалить', exact: true }).click()
+  await expect(dialog.getByRole('button', { name: 'Удалить эту версию' })).toHaveCount(versions - 1)
+  await dialog.getByRole('button', { name: 'Удалить все' }).click()
+  await expect(dialog.getByText(/^Удалить (все \d+ верси[яий]+|единственную версию)\? Это нельзя отменить\.$/)).toBeVisible()
+  await dialog.getByRole('button', { name: 'Удалить все' }).click()
+  await expect(dialog.getByText('Версий пока нет.')).toBeVisible()
+  await dialog.getByRole('button', { name: 'Закрыть' }).click()
+  await expect(page.getByRole('button', { name: /Автосохранённые версии/ })).toHaveCount(0)
+  expect(errors).toEqual([])
+})
+
+test('the table and issues views are not covered by the hidden tree canvas', async ({ page }) => {
+  await page.goto('/ru/editor/')
+  await page.getByRole('button', { name: /Посмотреть на примере/ }).click()
+  await expect(page.locator('.canvas-stats')).toContainText('300 чел.')
+  await expect(page.locator('.react-flow__node-person').first()).toBeVisible()
+  // React Flow sets inline visibility: visible and pointer-events: all on cards, so hit testing is the real check.
+  const canvasHits = () => page.evaluate(() => {
+    const main = document.querySelector('.main-view')!.getBoundingClientRect()
+    let hits = 0
+    for (let x = main.left + 10; x < main.right; x += 40) for (let y = main.top + 10; y < main.bottom; y += 40) {
+      if (document.elementFromPoint(x, y)?.closest('.canvas')) hits++
+    }
+    return hits
+  })
+  for (const view of ['Таблица', 'Замечания']) {
+    await page.getByRole('button', { name: view, exact: true }).click()
+    await expect.poll(canvasHits).toBe(0)
+  }
+  await page.getByRole('button', { name: 'Дерево', exact: true }).click()
+  await expect.poll(canvasHits).toBeGreaterThan(0)
+  await expect(page.locator('.react-flow__node-person').first()).toBeVisible()
+})

@@ -11,12 +11,16 @@
    * While the table or issues view is open the canvas stays laid out but invisible:
    * React Flow measures cards that arrive in the meantime (a layout finishing, a new
    * document) at their real size. Under display: none they measured 0 × 0, and the
-   * canvas drew NaN positions when shown again.
+   * canvas drew NaN positions when shown again. visibility: hidden is not enough:
+   * React Flow puts inline visibility: visible and pointer-events: all on every
+   * measured card, so the cards showed through the table and caught its clicks.
+   * clip-path hides the whole subtree from painting and hit testing; the element
+   * is also inert (App.tsx) so nothing inside can take keyboard focus.
    */
   .canvas.is-hidden {
     position: absolute;
     inset: 0;
-    visibility: hidden;
+    clip-path: inset(50%);
     pointer-events: none;
   }
 
